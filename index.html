@@ -1,0 +1,1815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ember &amp; Oak — Coffee House, Bradford</title>
+<meta name="description" content="Ember &amp; Oak is a speciality coffee house on Bradford, West Yorkshire. Single origin espresso, honest bakes and a room that's happy to see you. Order ahead, skip the queue.">
+<meta name="theme-color" content="#F6F0E4">
+<meta property="og:title" content="Ember &amp; Oak — Coffee House, Bradford">
+<meta property="og:description" content="Slow mornings, honest coffee. Order ahead, skip the queue — a demo landing-page project.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23271A10'/%3E%3Cellipse cx='16' cy='16' rx='8' ry='6' fill='%23C05F27' transform='rotate(-24 16 16)'/%3E%3Cpath d='M16 10.5c-3.2 3-3.2 8 0 11' stroke='%23F6F0E4' stroke-width='2.2' fill='none' transform='rotate(-24 16 16)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Outfit:wght@300..800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   EMBER & OAK — single-file landing page
+   Palette: cream paper / espresso ink / copper ember / soft sage
+   Type: Fraunces (display serif) + Outfit (body sans)
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --paper:#F6F0E4;
+  --paper-2:#EFE6D3;
+  --paper-3:#E9DCC2;
+  --ink:#271A10;
+  --ink-70:rgba(39,26,16,.70);
+  --ink-55:rgba(39,26,16,.55);
+  --line:rgba(39,26,16,.16);
+  --ember:#C05F27;
+  --ember-deep:#9A4A1E;
+  --ember-soft:rgba(192,95,39,.14);
+  --sage:#5F6A4E;
+  --dark:#221609;
+  --dark-2:#2B1D0F;
+  --cream-on-dark:#F6F0E4;
+  --cream-dim:rgba(246,240,228,.62);
+  --radius:22px;
+  --shadow-soft:0 24px 48px -28px rgba(58,40,23,.45);
+  --font-display:"Fraunces",Georgia,serif;
+  --font-body:"Outfit","Segoe UI",Helvetica,Arial,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body);
+  font-size:16.5px;line-height:1.65;color:var(--ink);
+  background:var(--paper);-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img{display:block;max-width:100%;height:auto;background:var(--paper-3)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+::selection{background:var(--ember);color:var(--paper)}
+:focus-visible{outline:2.5px dashed var(--ember);outline-offset:3px;border-radius:4px}
+
+/* film-grain texture over everything (subtle) */
+.grain{position:fixed;inset:0;z-index:999;pointer-events:none;opacity:.055;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.wrap{max-width:1160px;margin-inline:auto;padding-inline:clamp(20px,4vw,44px)}
+section{padding-block:clamp(56px,9vw,104px)}
+
+/* ---------- shared typography ---------- */
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:12.5px;font-weight:700;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--ember)}
+.eyebrow::before{content:"";width:26px;height:2px;background:var(--ember);border-radius:2px}
+.h2{font-family:var(--font-display);font-weight:560;font-size:clamp(30px,4.4vw,46px);
+  line-height:1.08;letter-spacing:-.4px;margin-top:14px}
+.h2 em{font-style:italic;color:var(--ember)}
+.lead{margin-top:16px;max-width:60ch;color:var(--ink-70);font-size:17px}
+.lead strong{color:var(--ink);font-weight:600}
+.section-head{max-width:720px;margin-bottom:clamp(30px,4vw,52px)}
+.section-head.center{margin-inline:auto;text-align:center}
+.section-head.center .eyebrow::before{display:none}
+.section-head.center .eyebrow{gap:8px}
+.section-head.center .eyebrow::after{content:"";width:26px;height:2px;background:var(--ember);border-radius:2px}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  padding:14px 28px;border-radius:999px;font-weight:600;font-size:15.5px;letter-spacing:.2px;
+  transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s,background .25s,color .25s;
+  white-space:nowrap;user-select:none}
+.btn svg{flex:none}
+.btn-ember{background:var(--ember);color:#FFF7EC;box-shadow:0 14px 26px -14px rgba(154,74,30,.65)}
+.btn-ember:hover{background:var(--ember-deep);transform:translateY(-3px);
+  box-shadow:0 20px 32px -14px rgba(154,74,30,.7)}
+.btn-ghost{border:1.5px solid var(--ink);color:var(--ink)}
+.btn-ghost:hover{background:var(--ink);color:var(--paper);transform:translateY(-3px)}
+.btn-cream{background:var(--cream-on-dark);color:var(--ink)}
+.btn-cream:hover{background:#fff;transform:translateY(-3px)}
+.btn-outline-cream{border:1.5px solid rgba(246,240,228,.5);color:var(--cream-on-dark)}
+.btn-outline-cream:hover{border-color:var(--cream-on-dark);background:rgba(246,240,228,.1)}
+.btn-sm{padding:9px 18px;font-size:14px}
+.text-link{display:inline-flex;align-items:center;gap:7px;font-weight:600;color:var(--ember);
+  border-bottom:1.5px solid rgba(192,95,39,.35);padding-bottom:2px;transition:gap .25s,color .25s}
+.text-link:hover{gap:12px;color:var(--ember-deep)}
+.text-link svg{transition:transform .25s}
+.text-link:hover svg{transform:translateX(3px)}
+
+/* ---------- announcement bar ---------- */
+.announce{background:var(--dark);color:var(--cream-dim);text-align:center;
+  font-size:12.8px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;
+  padding:11px 16px}
+.announce b{color:var(--cream-on-dark);font-weight:600}
+
+/* ---------- navigation ---------- */
+.nav{position:sticky;top:0;z-index:60;transition:background .3s,box-shadow .3s,border-color .3s;
+  border-bottom:1px solid transparent;background:rgba(246,240,228,.6);backdrop-filter:blur(0px)}
+.nav.scrolled{background:rgba(246,240,228,.88);backdrop-filter:blur(14px);
+  border-color:var(--line);box-shadow:0 10px 30px -22px rgba(58,40,23,.5)}
+.nav-inner{display:flex;align-items:center;gap:26px;height:78px}
+.brand{display:flex;align-items:center;gap:12px;flex:none}
+.brand-mark{width:40px;height:40px;border-radius:12px;background:var(--ink);
+  display:grid;place-items:center;transition:transform .4s cubic-bezier(.2,.7,.2,1)}
+.brand:hover .brand-mark{transform:rotate(-10deg) scale(1.05)}
+.brand-name{font-family:var(--font-display);font-weight:600;font-size:21px;letter-spacing:-.3px;line-height:1}
+.brand-sub{display:block;font-family:var(--font-body);font-size:10.5px;font-weight:600;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--ink-55);margin-top:3px}
+.nav-links{display:flex;gap:30px;margin-left:auto;list-style:none}
+.nav-links a{position:relative;font-size:15px;font-weight:550;color:var(--ink-70);padding:6px 0}
+.nav-links a::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:100%;
+  background:var(--ember);border-radius:2px;transform:scaleX(0);transform-origin:left;
+  transition:transform .3s cubic-bezier(.2,.7,.2,1)}
+.nav-links a:hover,.nav-links a.active{color:var(--ink)}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
+.nav-actions{display:flex;align-items:center;gap:12px;flex:none}
+.cart-btn{position:relative;width:46px;height:46px;border-radius:999px;
+  border:1.5px solid var(--line);display:grid;place-items:center;transition:background .25s,border-color .25s}
+.cart-btn:hover{background:var(--ember-soft);border-color:var(--ember)}
+.cart-count{position:absolute;top:-4px;right:-4px;min-width:21px;height:21px;padding:0 5px;
+  border-radius:999px;background:var(--ember);color:#FFF7EC;font-size:11.5px;font-weight:700;
+  display:grid;place-items:center;transform:scale(0);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.cart-count.on{transform:scale(1)}
+.cart-btn.pop{animation:pop .45s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{40%{transform:scale(1.18)}}
+.nav .btn{margin-left:2px}
+.burger{display:none;width:46px;height:46px;border-radius:12px;border:1.5px solid var(--line);
+  flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.burger span{display:block;width:20px;height:2px;background:var(--ink);border-radius:2px;
+  transition:transform .3s,opacity .3s}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* mobile menu overlay */
+.m-menu{position:fixed;inset:0;z-index:55;background:var(--paper);display:none;
+  flex-direction:column;justify-content:center;padding:24px clamp(24px,8vw,60px)}
+.m-menu.open{display:flex;animation:menuIn .35s ease}
+@keyframes menuIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.m-menu nav{display:flex;flex-direction:column;gap:6px;margin-top:-40px}
+.m-link{font-family:var(--font-display);font-size:clamp(30px,8vw,44px);font-weight:560;
+  line-height:1.25;display:flex;align-items:baseline;gap:14px;color:var(--ink);
+  border-bottom:1px solid var(--line);padding-block:10px}
+.m-link small{font-family:var(--font-body);font-size:13px;font-weight:600;color:var(--ember)}
+.m-menu .m-foot{margin-top:28px;color:var(--ink-55);font-size:14px}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;padding-top:clamp(30px,5vw,60px);padding-bottom:clamp(40px,6vw,72px)}
+.hero::before{content:"";position:absolute;right:-8%;top:-14%;width:min(56vw,720px);aspect-ratio:1;
+  background:radial-gradient(closest-side,rgba(192,95,39,.16),transparent 72%);pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:clamp(28px,5vw,70px);align-items:center}
+.hero-copy{max-width:560px}
+.rise{animation:riseFade .9s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--d,0s)}
+@keyframes riseFade{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.hero h1{font-family:var(--font-display);font-weight:480;
+  font-size:clamp(42px,6.6vw,76px);line-height:1.02;letter-spacing:-.8px;margin-top:20px}
+.hero h1 em{display:inline-block;font-style:italic;font-weight:560;color:var(--ember);
+  position:relative}
+.hero h1 .squiggle{position:absolute;left:0;bottom:-6px;width:100%;overflow:visible}
+.squiggle path{stroke:var(--ember);stroke-width:3.4;fill:none;stroke-linecap:round;
+  stroke-dasharray:230;stroke-dashoffset:230;animation:draw 1.1s .8s cubic-bezier(.5,0,.3,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.hero-sub{margin-top:22px;font-size:clamp(16px,1.6vw,18.5px);color:var(--ink-70);max-width:46ch}
+.hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
+.hero-trust{display:flex;align-items:center;gap:14px;margin-top:30px;flex-wrap:wrap;
+  color:var(--ink-55);font-size:14px}
+.stars{display:inline-flex;gap:2.5px}
+.stars svg{color:var(--ember)}
+.hero-trust .divider{width:1px;height:18px;background:var(--line)}
+.hero-trust b{color:var(--ink);font-weight:650}
+
+/* hero artwork — animated SVG */
+.hero-art{position:relative;max-width:560px;margin-inline:auto;width:100%}
+.hero-art svg.main{width:100%;height:auto;display:block}
+.steam-p{animation:steamFloat 3.4s ease-in-out infinite;opacity:0}
+.steam-p.s2{animation-delay:1.15s;animation-duration:3.9s}
+.steam-p.s3{animation-delay:2.3s;animation-duration:3.7s}
+@keyframes steamFloat{
+  0%{transform:translateY(8px) scale(.97);opacity:0}
+  22%{opacity:.85}
+  55%{opacity:.45}
+  100%{transform:translateY(-30px) translateX(5px) scale(1.05);opacity:0}}
+.ripple{animation:ripple 3.6s ease-out infinite;transform-box:fill-box;transform-origin:center;
+  opacity:0}
+.ripple.r2{animation-delay:1.8s}
+@keyframes ripple{0%{transform:scale(.55);opacity:.6}70%{transform:scale(1.5);opacity:0}100%{opacity:0}}
+.stamp-wrap{position:absolute;top:6%;right:-2%;width:clamp(96px,19%,132px);animation:riseFade 1s .5s both}
+.stamp-spin{animation:spin 24s linear infinite;transform-box:fill-box;transform-origin:center}
+@keyframes spin{to{transform:rotate(360deg)}}
+.bean-f{animation:bob 5.2s ease-in-out infinite;transform-box:fill-box;
+  animation-delay:var(--d,0s)}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}
+  50%{transform:translateY(-13px) rotate(calc(var(--r,0deg) + 7deg))}}
+.orbit{animation:spin 60s linear infinite;transform-box:fill-box;transform-origin:center}
+.twinkle{animation:twinkle 3.8s ease-in-out infinite;transform-box:fill-box;
+  transform-origin:center;animation-delay:var(--d,0s)}
+@keyframes twinkle{0%,100%{opacity:.15;transform:scale(.75) rotate(0deg)}
+  50%{opacity:.9;transform:scale(1.1) rotate(18deg)}}
+
+/* ---------- marquee strip ---------- */
+.marquee{background:var(--dark);color:var(--cream-on-dark);overflow:hidden;
+  padding-block:15px;border-block:1px solid rgba(246,240,228,.14)}
+.marquee-track{display:flex;width:max-content;animation:marqueeMove 26s linear infinite}
+.marquee:hover .marquee-track{animation-play-state:paused}
+@keyframes marqueeMove{to{transform:translateX(-50%)}}
+.marquee-seq{display:flex;align-items:center;gap:44px;padding-right:44px;
+  font-size:13.5px;letter-spacing:.24em;text-transform:uppercase;font-weight:600;white-space:nowrap}
+.marquee-seq .m-item{display:inline-flex;align-items:center;gap:44px}
+.marquee-seq i{font-family:var(--font-display);font-style:italic;font-weight:480;
+  letter-spacing:.06em;text-transform:none;font-size:15px;color:var(--ember)}
+
+/* ---------- visit strip ---------- */
+.visit-strip{padding-block:clamp(34px,5vw,54px)}
+.visit-card{display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr;gap:0;
+  background:var(--paper-2);border:1.5px dashed rgba(39,26,16,.28);border-radius:26px;overflow:hidden}
+.visit-item{display:flex;gap:14px;align-items:flex-start;padding:24px 26px;
+  border-left:1.5px dashed rgba(39,26,16,.22)}
+.visit-item:first-child{border-left:0}
+.visit-item .v-ico{flex:none;width:44px;height:44px;border-radius:14px;background:var(--paper);
+  display:grid;place-items:center;color:var(--ember);border:1px solid var(--line)}
+.visit-item h4{font-family:var(--font-display);font-size:17px;font-weight:600;letter-spacing:.2px}
+.visit-item p{font-size:14px;color:var(--ink-70);margin-top:3px;line-height:1.5}
+.visit-item .text-link{margin-top:8px;font-size:13.5px}
+
+/* ---------- favourites (products) ---------- */
+.fav-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:26px}
+.card{background:#FFFDF7;border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s,border-color .35s}
+.card:hover{transform:translateY(-7px);box-shadow:var(--shadow-soft);border-color:rgba(192,95,39,.4)}
+.card-media{position:relative;aspect-ratio:4/3.1;overflow:hidden}
+.card-media img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.card:hover .card-media img{transform:scale(1.06)}
+.tag-chip{position:absolute;top:14px;left:14px;background:rgba(34,22,9,.82);color:var(--cream-on-dark);
+  backdrop-filter:blur(6px);font-size:11.5px;font-weight:650;letter-spacing:.12em;text-transform:uppercase;
+  padding:7px 12px;border-radius:999px;display:inline-flex;align-items:center;gap:7px}
+.tag-chip::before{content:"";width:6px;height:6px;border-radius:99px;background:var(--ember)}
+.card-body{padding:20px 22px 22px}
+.card-title-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.card-title-row h3{font-family:var(--font-display);font-size:20px;font-weight:600;letter-spacing:-.2px}
+.price{font-weight:700;font-size:16.5px;color:var(--ember-deep);flex:none}
+.card-desc{font-size:14px;color:var(--ink-70);margin-top:7px;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card-actions{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+.card-meta{font-size:12.5px;color:var(--ink-55);display:inline-flex;align-items:center;gap:6px}
+.add-btn{display:inline-flex;align-items:center;gap:9px;padding:10px 20px;border-radius:999px;
+  border:1.5px solid var(--ink);font-weight:650;font-size:14px;transition:all .25s}
+.add-btn:hover{background:var(--ink);color:var(--paper);transform:translateY(-2px)}
+.add-btn:active{transform:scale(.96)}
+
+/* ---------- stats band ---------- */
+.stats{background:var(--dark);color:var(--cream-on-dark);padding-block:clamp(44px,6vw,70px)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;text-align:center}
+.stat b{font-family:var(--font-display);font-weight:560;font-size:clamp(38px,4.6vw,58px);
+  letter-spacing:-1px;color:var(--cream-on-dark);display:block;line-height:1}
+.stat b .unit{font-size:.55em;color:var(--ember)}
+.stat span{display:block;margin-top:10px;font-size:13px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--cream-dim);font-weight:600}
+.stat .stat-line{width:34px;height:2px;background:var(--ember);margin:14px auto 0;border-radius:2px}
+
+/* ---------- order ahead ---------- */
+.order-panel{background:var(--dark-2);color:var(--cream-on-dark);border-radius:32px;
+  overflow:hidden;display:grid;grid-template-columns:.92fr 1.08fr;position:relative}
+.order-panel::after{content:"";position:absolute;inset:0;border:1px solid rgba(246,240,228,.16);
+  border-radius:32px;pointer-events:none}
+.order-media{position:relative;min-height:380px}
+.order-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.94}
+.order-media::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(43,29,15,.18),rgba(43,29,15,.55))}
+.order-body{padding:clamp(32px,4vw,58px) clamp(26px,4vw,60px)}
+.order-body .eyebrow{color:var(--ember)}
+.order-body .eyebrow::before{background:var(--ember)}
+.order-body h2{font-family:var(--font-display);font-weight:560;font-size:clamp(28px,3.6vw,42px);
+  line-height:1.1;margin-top:14px}
+.order-body h2 em{font-style:italic;color:var(--ember)}
+.order-body>p{color:var(--cream-dim);margin-top:14px;max-width:44ch}
+.steps{list-style:none;margin-top:30px;display:flex;flex-direction:column;gap:18px}
+.steps li{display:flex;gap:16px;align-items:flex-start}
+.step-n{flex:none;width:34px;height:34px;border-radius:99px;border:1.5px solid rgba(192,95,39,.7);
+  color:var(--ember);display:grid;place-items:center;font-weight:700;font-size:14px}
+.steps b{display:block;font-weight:650;font-size:15.5px}
+.steps p{color:var(--cream-dim);font-size:14px;margin-top:2px;line-height:1.55}
+.order-cta{display:flex;align-items:center;gap:18px;margin-top:34px;flex-wrap:wrap}
+.order-note{font-size:13px;color:var(--cream-dim);display:inline-flex;align-items:center;gap:8px}
+.cater-line{margin-top:22px;padding-top:20px;border-top:1px solid rgba(246,240,228,.14);
+  font-size:14px;color:var(--cream-dim)}
+.cater-line .text-link{color:var(--ember);border-color:rgba(192,95,39,.5)}
+
+/* ---------- values ---------- */
+.values-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.value-card{background:#FFFDF7;border:1px solid var(--line);border-radius:var(--radius);
+  padding:34px 30px;position:relative;overflow:hidden;transition:transform .35s,box-shadow .35s}
+.value-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-soft)}
+.value-card::after{content:"";position:absolute;right:-40px;top:-40px;width:130px;height:130px;
+  border-radius:99px;background:var(--ember-soft);transition:transform .5s}
+.value-card:hover::after{transform:scale(1.35)}
+.value-ico{position:relative;z-index:1;width:54px;height:54px;border-radius:18px;
+  background:var(--ink);color:var(--paper);display:grid;place-items:center;margin-bottom:20px}
+.value-card h3{position:relative;z-index:1;font-family:var(--font-display);font-size:22px;font-weight:600}
+.value-card p{position:relative;z-index:1;margin-top:10px;color:var(--ink-70);font-size:15px}
+
+/* ---------- story ---------- */
+.story-grid{display:grid;grid-template-columns:.94fr 1.06fr;gap:clamp(30px,5vw,72px);align-items:center}
+.story-media{position:relative}
+.story-media .frame{border-radius:28px;overflow:hidden;aspect-ratio:4/4.7;
+  border:1px solid var(--line);box-shadow:var(--shadow-soft)}
+.story-media img{width:100%;height:100%;object-fit:cover}
+.story-media .photo-badge{position:absolute;bottom:-22px;left:-22px;background:var(--paper);
+  border:1px solid var(--line);border-radius:18px;padding:16px 20px;display:flex;gap:14px;
+  align-items:center;box-shadow:var(--shadow-soft)}
+.photo-badge b{font-family:var(--font-display);font-size:24px;font-weight:560;display:block;line-height:1}
+.photo-badge span{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-55);font-weight:650}
+.story-copy .sign{margin-top:26px;font-family:var(--font-display);font-style:italic;
+  font-size:19px;color:var(--ink-70)}
+.story-copy .sign b{color:var(--ember);font-style:normal;font-family:var(--font-body);
+  font-size:12px;letter-spacing:.2em;text-transform:uppercase;display:block;margin-top:6px}
+.story-facts{display:flex;gap:26px;margin-top:24px;flex-wrap:wrap}
+.story-facts div{font-size:13.5px;color:var(--ink-70);display:flex;gap:9px;align-items:center}
+.story-facts svg{color:var(--ember);flex:none}
+
+/* ---------- menu ---------- */
+#menu{background:var(--paper-2);border-block:1px solid var(--line)}
+.menu-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:34px}
+.tab{padding:12px 22px;border-radius:999px;border:1.5px solid rgba(39,26,16,.3);
+  font-weight:600;font-size:14.5px;color:var(--ink-70);display:inline-flex;gap:9px;align-items:center;
+  transition:all .25s;background:transparent}
+.tab .n{font-size:12px;font-weight:700;color:var(--ember);background:var(--ember-soft);
+  padding:2px 9px;border-radius:99px}
+.tab:hover{border-color:var(--ink);color:var(--ink)}
+.tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tab.active .n{background:var(--ember);color:#FFF7EC}
+.menu-panel{display:none;animation:menuIn .4s ease}
+.menu-panel.active{display:block}
+.menu-cols{display:grid;grid-template-columns:1fr 1fr;gap:6px clamp(28px,5vw,64px)}
+.menu-item{display:flex;align-items:baseline;gap:10px;padding:15px 2px 13px;
+  border-bottom:1px dotted rgba(39,26,16,.3)}
+.menu-item .m-name{font-family:var(--font-display);font-weight:600;font-size:17.5px;letter-spacing:-.2px}
+.menu-item .m-name small{display:block;font-family:var(--font-body);font-weight:450;
+  font-size:13px;color:var(--ink-55);margin-top:3px;letter-spacing:0}
+.menu-item .m-dots{flex:1;border-bottom:2px dotted rgba(39,26,16,.22);transform:translateY(-4px)}
+.menu-item .m-price{font-weight:700;font-size:15px;color:var(--ember-deep)}
+.menu-foot{margin-top:30px;display:flex;justify-content:space-between;align-items:center;
+  gap:18px;flex-wrap:wrap;font-size:13.5px;color:var(--ink-55)}
+.menu-foot .btn{flex:none}
+.menu-side{margin-top:38px;display:flex;gap:22px;align-items:center;background:#FFFDF7;
+  border:1px solid var(--line);border-radius:20px;padding:18px 22px;flex-wrap:wrap}
+.menu-side img{width:86px;height:86px;border-radius:16px;object-fit:cover;flex:none}
+.menu-side p{font-size:14.5px;color:var(--ink-70);max-width:52ch}
+.menu-side b{color:var(--ink)}
+
+/* ---------- reviews ---------- */
+.rating-summary{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:36px}
+.rating-summary .score{font-family:var(--font-display);font-size:52px;font-weight:560;line-height:1}
+.rating-summary .meta{font-size:14px;color:var(--ink-70)}
+.rating-summary .meta b{color:var(--ink)}
+.review-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:24px}
+.review-card{background:#FFFDF7;border:1px solid var(--line);border-radius:var(--radius);
+  padding:28px 28px 24px;display:flex;flex-direction:column;gap:16px;position:relative;
+  transition:transform .35s,box-shadow .35s}
+.review-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-soft)}
+.review-card::before{content:"“";position:absolute;top:8px;right:20px;font-family:var(--font-display);
+  font-size:64px;line-height:1;color:var(--ember-soft);font-weight:600}
+.review-card .stars{margin-top:2px}
+.review-card p{font-size:15.5px;color:var(--ink-70);position:relative;z-index:1}
+.reviewer{display:flex;gap:13px;align-items:center;margin-top:auto}
+.avatar{width:44px;height:44px;border-radius:99px;background:var(--ember);color:#FFF7EC;
+  display:grid;place-items:center;font-weight:700;font-size:15px;letter-spacing:.5px;flex:none}
+.reviewer b{font-size:14.5px;display:block}
+.reviewer span{font-size:12.5px;color:var(--ink-55)}
+.verified{display:inline-flex;gap:6px;align-items:center;font-size:12px;font-weight:650;
+  color:var(--sage);background:rgba(95,106,78,.14);padding:4px 10px;border-radius:99px}
+
+/* ---------- journal ---------- */
+.journal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:26px}
+.journal-card{cursor:pointer;text-align:left;display:flex;flex-direction:column;border:1px solid var(--line);
+  border-radius:var(--radius);overflow:hidden;background:#FFFDF7;
+  transition:transform .35s,box-shadow .35s}
+.journal-card:hover{transform:translateY(-7px);box-shadow:var(--shadow-soft)}
+.journal-card .card-media{aspect-ratio:16/10}
+.journal-card .j-body{padding:22px 24px 24px;display:flex;flex-direction:column;gap:10px;flex:1}
+.j-chip{align-self:flex-start;font-size:11.5px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ember);background:var(--ember-soft);
+  padding:5px 11px;border-radius:99px}
+.journal-card h3{font-family:var(--font-display);font-size:21px;font-weight:600;
+  letter-spacing:-.3px;line-height:1.2}
+.journal-card p{font-size:14px;color:var(--ink-70)}
+.j-meta{margin-top:auto;padding-top:8px;display:flex;gap:10px;align-items:center;
+  font-size:12.5px;color:var(--ink-55)}
+.j-meta .dot{width:4px;height:4px;border-radius:99px;background:var(--ink-55)}
+
+/* ---------- FAQ ---------- */
+.faq-list{max-width:780px;margin-inline:auto;display:flex;flex-direction:column;gap:14px}
+.faq-item{background:#FFFDF7;border:1px solid var(--line);border-radius:18px;overflow:hidden;
+  transition:border-color .3s}
+.faq-item.open{border-color:rgba(192,95,39,.5)}
+.faq-q{width:100%;display:flex;justify-content:space-between;align-items:center;gap:18px;
+  padding:20px 24px;text-align:left;font-family:var(--font-display);font-weight:600;
+  font-size:18px;letter-spacing:-.2px}
+.faq-q .chev{flex:none;width:34px;height:34px;border-radius:99px;border:1.5px solid var(--line);
+  display:grid;place-items:center;transition:transform .35s,background .3s,color .3s, border-color .3s}
+.faq-item.open .chev{transform:rotate(180deg);background:var(--ember);color:#FFF7EC;border-color:var(--ember)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.2,.7,.2,1)}
+.faq-a p{padding:0 24px 22px;color:var(--ink-70);font-size:15px;max-width:60ch}
+.faq-a .text-link{margin:0 24px 22px;display:inline-flex}
+
+/* ---------- newsletter ---------- */
+.news{background:linear-gradient(135deg,var(--ember) 0%,var(--ember-deep) 100%);
+  border-radius:34px;color:#FFF7EC;padding:clamp(38px,6vw,72px) clamp(26px,5vw,72px);
+  display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,4vw,60px);align-items:center;
+  position:relative;overflow:hidden}
+.news::before{content:"";position:absolute;left:-150px;bottom:-180px;width:340px;height:340px;
+  border-radius:99px;background:rgba(255,247,236,.1)}
+.news::after{content:"";position:absolute;right:-95px;top:-115px;width:240px;height:240px;
+  border-radius:99px;background:rgba(255,247,236,.07)}
+.news h2{font-family:var(--font-display);font-weight:560;font-size:clamp(28px,3.6vw,42px);
+  line-height:1.1;position:relative;z-index:1}
+.news h2 em{font-style:italic}
+.news p{margin-top:14px;color:rgba(255,247,236,.82);position:relative;z-index:1;max-width:44ch}
+.news-form{display:flex;gap:10px;flex-wrap:wrap;position:relative;z-index:1}
+.news-form input{flex:1;min-width:220px;padding:15px 22px;border-radius:999px;border:0;
+  font:inherit;font-size:15px;background:rgba(255,247,236,.96);color:var(--ink)}
+.news-form input::placeholder{color:var(--ink-55)}
+.news-form input:focus{outline:2.5px solid var(--ink);outline-offset:2px}
+.news-form button{background:var(--ink);color:var(--paper)}
+.news-form button:hover{background:#000;transform:translateY(-2px)}
+.news-note{margin-top:12px;font-size:12.5px;color:rgba(255,247,236,.65);position:relative;z-index:1}
+.news-ok{display:none;align-items:center;gap:10px;font-weight:600}
+.news-ok.on{display:inline-flex;animation:riseFade .5s ease}
+.news-ok svg{color:#BFF0C9}
+
+/* ---------- footer ---------- */
+footer{background:var(--dark);color:var(--cream-dim);padding-top:clamp(48px,7vw,80px);position:relative}
+.footer-grid{display:grid;grid-template-columns:1.35fr .8fr .8fr .8fr;gap:clamp(26px,4vw,56px)}
+.footer-brand .brand-name{color:var(--cream-on-dark)}
+.footer-brand .brand-sub{color:var(--cream-dim)}
+.footer-brand .brand-mark{background:var(--ember)}
+.footer-brand p{margin-top:18px;font-size:14.5px;max-width:34ch;line-height:1.7}
+.socials{display:flex;gap:10px;margin-top:24px}
+.social-btn{width:44px;height:44px;border-radius:14px;border:1.5px solid rgba(246,240,228,.25);
+  display:grid;place-items:center;color:var(--cream-on-dark);transition:all .25s}
+.social-btn:hover{background:var(--ember);border-color:var(--ember);transform:translateY(-3px)}
+footer h4{color:var(--cream-on-dark);font-size:12px;font-weight:700;letter-spacing:.22em;
+  text-transform:uppercase;margin-bottom:18px}
+.f-list{list-style:none;display:flex;flex-direction:column;gap:11px;font-size:14.5px}
+.f-list a,.f-list button{display:inline-flex;gap:9px;align-items:center;transition:color .25s;
+  text-align:left;font-size:14.5px;color:var(--cream-dim)}
+.f-list a:hover,.f-list button:hover{color:var(--cream-on-dark)}
+.f-list svg{color:var(--ember);flex:none}
+.f-bottom{margin-top:clamp(36px,5vw,56px);border-top:1px solid rgba(246,240,228,.13);
+  padding-block:26px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-size:13px;color:rgba(246,240,228,.45)}
+
+/* ---------- cart drawer ---------- */
+.scrim{position:fixed;inset:0;background:rgba(24,15,6,.55);backdrop-filter:blur(3px);
+  z-index:70;opacity:0;pointer-events:none;transition:opacity .35s}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(430px,94vw);z-index:80;
+  background:var(--paper);display:flex;flex-direction:column;
+  transform:translateX(105%);transition:transform .45s cubic-bezier(.2,.7,.2,1);
+  box-shadow:-30px 0 60px -30px rgba(24,15,6,.4)}
+.drawer.open{transform:none}
+.drawer-head{display:flex;justify-content:space-between;align-items:center;
+  padding:22px 26px;border-bottom:1px solid var(--line)}
+.drawer-head h3{font-family:var(--font-display);font-size:23px;font-weight:600}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+  border:1.5px solid var(--line);transition:all .25s}
+.icon-btn:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.ship-bar{padding:16px 26px;border-bottom:1px solid var(--line);background:var(--paper-2)}
+.ship-bar p{font-size:13px;color:var(--ink-70);margin-bottom:10px}
+.ship-bar p b{color:var(--ember-deep)}
+.ship-track{height:7px;border-radius:99px;background:rgba(39,26,16,.13);overflow:hidden}
+.ship-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--ember),var(--ember-deep));
+  transition:width .6s cubic-bezier(.2,.7,.2,1)}
+.drawer-body{flex:1;overflow-y:auto;padding:10px 26px}
+.cart-empty{text-align:center;padding:56px 10px;display:flex;flex-direction:column;
+  align-items:center;gap:16px;color:var(--ink-55)}
+.cart-empty .cup-ico{width:84px;height:84px;border-radius:26px;background:var(--paper-2);
+  display:grid;place-items:center;color:var(--ember)}
+.cart-item{display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);
+  animation:riseFade .4s ease}
+.cart-item img{width:78px;height:78px;border-radius:16px;object-fit:cover;flex:none}
+.cart-item .ci-body{flex:1;min-width:0}
+.cart-item h4{font-family:var(--font-display);font-size:16.5px;font-weight:600;line-height:1.25}
+.cart-item .ci-price{font-size:13px;color:var(--ink-55);margin-top:2px}
+.qty-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.qty{display:inline-flex;align-items:center;gap:2px;border:1.5px solid var(--line);
+  border-radius:999px;padding:3px}
+.qty button{width:28px;height:28px;border-radius:99px;display:grid;place-items:center;
+  transition:background .2s}
+.qty button:hover{background:var(--ember-soft)}
+.qty b{min-width:26px;text-align:center;font-size:14px}
+.remove-btn{font-size:12.5px;color:var(--ink-55);font-weight:600;transition:color .2s}
+.remove-btn:hover{color:var(--ember-deep)}
+.drawer-foot{padding:20px 26px 24px;border-top:1px solid var(--line);background:#FFFDF7}
+.subtotal-row{display:flex;justify-content:space-between;align-items:baseline}
+.subtotal-row b{font-family:var(--font-display);font-size:22px;font-weight:600}
+.drawer-foot .note{font-size:12.5px;color:var(--ink-55);margin-top:6px}
+.drawer-foot .btn{width:100%;margin-top:14px}
+/* order confirmation view */
+.done-view{display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;text-align:center;padding:40px}
+.done-view.on{display:flex}
+.done-ico{width:84px;height:84px;border-radius:99px;background:var(--ember);color:#FFF7EC;
+  display:grid;place-items:center;animation:pop .6s cubic-bezier(.34,1.56,.64,1)}
+.done-view h4{font-family:var(--font-display);font-size:26px;font-weight:600}
+.done-view .order-n{font-weight:700;color:var(--ember-deep);letter-spacing:.06em}
+.done-view p{font-size:14px;color:var(--ink-70);max-width:30ch}
+.done-view .btn{margin-top:8px}
+
+/* ---------- modal ---------- */
+.modal{position:fixed;inset:0;z-index:90;display:none;place-items:center;padding:20px}
+.modal.on{display:grid}
+.modal-card{background:var(--paper);border-radius:26px;max-width:620px;width:100%;
+  max-height:84vh;overflow-y:auto;padding:clamp(26px,4vw,44px);position:relative;
+  animation:modalIn .4s cubic-bezier(.2,.7,.2,1);box-shadow:0 40px 80px -30px rgba(24,15,6,.5)}
+@keyframes modalIn{from{opacity:0;transform:translateY(26px) scale(.97)}to{opacity:1;transform:none}}
+.modal-close{position:absolute;top:18px;right:18px}
+.modal-card .j-chip{margin-bottom:14px}
+.modal-card h3{font-family:var(--font-display);font-size:clamp(24px,3vw,32px);font-weight:600;
+  letter-spacing:-.4px;line-height:1.15}
+.modal-card .m-meta{color:var(--ink-55);font-size:13px;margin-top:8px;display:flex;gap:10px;align-items:center}
+.modal-card .m-body{margin-top:18px;color:var(--ink-70);font-size:15.5px;display:flex;
+  flex-direction:column;gap:14px}
+.modal-card .m-body p:first-child::first-letter{font-family:var(--font-display);font-size:3.1em;
+  float:left;line-height:.82;padding:4px 10px 0 0;color:var(--ember);font-weight:600}
+
+/* ---------- toast ---------- */
+.toasts{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:110;
+  display:flex;flex-direction:column;gap:10px;align-items:center;pointer-events:none}
+.toast{display:inline-flex;align-items:center;gap:11px;background:var(--ink);color:var(--paper);
+  padding:13px 22px;border-radius:999px;font-size:14px;font-weight:600;
+  box-shadow:0 18px 40px -14px rgba(24,15,6,.55);animation:toastIn .4s cubic-bezier(.2,.7,.2,1);
+  transition:opacity .4s,transform .4s;max-width:88vw}
+.toast.out{opacity:0;transform:translateY(10px)}
+.toast svg{color:#BFF0C9;flex:none}
+@keyframes toastIn{from{opacity:0;transform:translateY(16px) scale(.95)}to{opacity:1;transform:none}}
+
+/* ---------- back to top ---------- */
+.to-top{position:fixed;right:22px;bottom:22px;z-index:65;width:50px;height:50px;
+  border-radius:99px;background:var(--ink);color:var(--paper);display:grid;place-items:center;
+  opacity:0;pointer-events:none;transform:translateY(12px);
+  transition:opacity .35s,transform .35s,background .25s;box-shadow:0 16px 30px -12px rgba(24,15,6,.5)}
+.to-top.on{opacity:1;pointer-events:auto;transform:none}
+.to-top:hover{background:var(--ember)}
+
+/* ---------- reveal on scroll ---------- */
+.reveal{opacity:0;transform:translateY(26px);
+  transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);
+  transition-delay:var(--d,0s)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:1020px){
+  .nav-links{gap:20px}
+  .hero-grid{grid-template-columns:1fr;gap:10px}
+  .hero-copy{max-width:640px}
+  .hero-art{max-width:470px}
+  .order-panel{grid-template-columns:1fr}
+  .order-media{min-height:300px}
+  .story-grid{grid-template-columns:1fr}
+  .story-media .frame{aspect-ratio:16/11}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .news{grid-template-columns:1fr}
+}
+@media (max-width:860px){
+  .nav-links,.nav .btn-order{display:none}
+  .burger{display:flex}
+  .visit-card{grid-template-columns:1fr 1fr}
+  .visit-item:nth-child(3){border-left:0}
+  .visit-item{border-top:1.5px dashed rgba(39,26,16,.22)}
+  .visit-item:nth-child(-n+2){border-top:0}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .menu-cols{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  body{font-size:15.5px}
+  .nav-inner{gap:14px;height:70px}
+  .brand-sub{font-size:9px;letter-spacing:.1em}
+  .hero h1{font-size:clamp(38px,11vw,48px)}
+  .hero-cta .btn{width:100%}
+  .visit-card{grid-template-columns:1fr}
+  .visit-item{border-left:0;border-top:1.5px dashed rgba(39,26,16,.22)}
+  .visit-item:first-child{border-top:0}
+  .news-form input{min-width:100%}
+  .news-form .btn{width:100%}
+  .footer-grid{grid-template-columns:1fr}
+  .f-bottom{justify-content:center;text-align:center}
+}
+@media (max-width:380px){
+  .brand-sub{display:none}
+  .brand-name{font-size:18px}
+  .nav-inner{gap:10px}
+  .nav-actions{gap:10px}
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;scroll-behavior:auto !important}
+  .reveal{opacity:1;transform:none}
+  .rise{opacity:1}
+  .steam-p{opacity:.5}
+}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"CafeOrCoffeeShop","name":"Ember & Oak Coffee House",
+"description":"Speciality coffee house on Bradford. Single-origin espresso, honest bakes, order ahead and collect.",
+"priceRange":"£","servesCuisine":"Coffee, Bakery, Brunch",
+"address":{"@type":"PostalAddress","streetAddress":"14 Harbourside Walk","addressLocality":"Bradford",
+"postalCode":"BS1 4QD","addressCountry":"GB"},
+"openingHours":"Mo-Su 07:30-18:00","telephone":"+44 117 496 0321"}
+</script>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ======= announcement ======= -->
+<div class="announce">Order ahead, collect in <b>~10 minutes</b> &nbsp;·&nbsp; <b>Free local delivery</b> over £20 &nbsp;·&nbsp; Beans roasted every Tuesday</div>
+
+<!-- ======= navigation ======= -->
+<header class="nav" id="navbar">
+  <div class="wrap nav-inner">
+    <a href="#top" class="brand" aria-label="Ember & Oak — back to top">
+      <span class="brand-mark">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><ellipse cx="12" cy="12" rx="6.5" ry="5" fill="#C05F27" transform="rotate(-24 12 12)"/><path d="M12 8.2c-2.4 2.1-2.4 5.5 0 7.6" stroke="#F6F0E4" stroke-width="1.6" transform="rotate(-24 12 12)"/></svg>
+      </span>
+      <span>
+        <span class="brand-name">Ember &amp; Oak</span>
+        <span class="brand-sub">Coffee House · Bradford</span>
+      </span>
+    </a>
+    <nav aria-label="Primary">
+      <ul class="nav-links">
+        <li><a href="#favourites">Favourites</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#story">Our Story</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="#journal">Journal</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <button class="cart-btn" id="cartBtn" aria-label="Open your order">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l1.2 12.2a1.6 1.6 0 0 1-1.6 1.8H6.4a1.6 1.6 0 0 1-1.6-1.8L6 7Z"/><path d="M8.5 10V6.5a3.5 3.5 0 0 1 7 0V10"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <a class="btn btn-ember btn-sm btn-order" href="#order">Order ahead</a>
+      <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- mobile menu -->
+<div class="m-menu" id="mobileMenu" aria-hidden="true">
+  <nav aria-label="Mobile">
+    <a class="m-link" href="#favourites"><small>01</small>Favourites</a>
+    <a class="m-link" href="#menu"><small>02</small>The full menu</a>
+    <a class="m-link" href="#story"><small>03</small>Our story</a>
+    <a class="m-link" href="#reviews"><small>04</small>Reviews</a>
+    <a class="m-link" href="#journal"><small>05</small>Journal</a>
+    <a class="m-link" href="#visit"><small>06</small>Visit us</a>
+  </nav>
+  <div class="m-foot">14 Harbourside Walk, Bradford BD10 4BQ· Open daily 7:30–18:00</div>
+</div>
+
+<main id="top">
+
+<!-- ======= hero ======= -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow rise" style="--d:.05s">Ember &amp; Oak · Bradford</span>
+      <h1>
+        <span class="rise" style="--d:.15s;display:block">Slow mornings,</span>
+        <span class="rise" style="--d:.25s;display:block"><em>honest coffee<svg class="squiggle" viewBox="0 0 220 14" preserveAspectRatio="none" aria-hidden="true"><path d="M3 10 C 30 3, 60 12, 90 8 S 150 3, 180 8 S 210 12, 217 6"/></svg></em>.</span>
+      </h1>
+      <p class="hero-sub rise" style="--d:.4s">Single origin espresso pulled with care, bakes worth queueing for, and a room that&rsquo;s happy to see you on the Harbourside Walk in Bradford.</p>
+      <div class="hero-cta rise" style="--d:.55s">
+        <a class="btn btn-ember" href="#order">
+          Order ahead
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="#menu">
+          See the menu
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></svg>
+        </a>
+      </div>
+      <div class="hero-trust rise" style="--d:.7s">
+        <span class="stars" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+        </span>
+        <b>4.9</b>&nbsp;from 214 reviews
+        <span class="divider"></span>
+        Open daily&nbsp;<b>7:30–18:00</b>
+      </div>
+    </div>
+
+    <!-- animated hero artwork -->
+    <div class="hero-art rise" style="--d:.3s" aria-hidden="true">
+      <svg class="main" viewBox="0 0 520 560" role="img" aria-label="Animated coffee cup with rising steam">
+        <defs>
+          <radialGradient id="heroGlow" cx="50%" cy="42%" r="60%">
+            <stop offset="0%" stop-color="#C05F27" stop-opacity="0.2"/>
+            <stop offset="55%" stop-color="#C05F27" stop-opacity="0.07"/>
+            <stop offset="100%" stop-color="#C05F27" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="coffeeGrad" cx="50%" cy="42%" r="65%">
+            <stop offset="0%" stop-color="#8A5630"/>
+            <stop offset="100%" stop-color="#552F13"/>
+          </radialGradient>
+        </defs>
+        <!-- soft backdrop -->
+        <ellipse cx="260" cy="312" rx="218" ry="206" fill="#EBDCC2"/>
+        <ellipse cx="260" cy="312" rx="218" ry="206" fill="url(#heroGlow)"/>
+        <circle class="orbit" cx="260" cy="312" r="238" fill="none" stroke="rgba(122,79,41,.4)" stroke-width="1.6" stroke-dasharray="3 12"/>
+        <!-- ground shadow + saucer -->
+        <ellipse cx="262" cy="474" rx="150" ry="14" fill="rgba(58,40,23,.16)"/>
+        <ellipse cx="260" cy="452" rx="160" ry="30" fill="#FFFDF7" stroke="#3A2817" stroke-width="3"/>
+        <ellipse cx="260" cy="452" rx="116" ry="18" fill="#EFE4CD" opacity=".7"/>
+        <!-- handle -->
+        <path d="M368 324 C424 314 444 358 417 386 C402 401 384 406 371 400" fill="none" stroke="#3A2817" stroke-width="21" stroke-linecap="round"/>
+        <path d="M368 324 C424 314 444 358 417 386 C402 401 384 406 371 400" fill="none" stroke="#FFFDF7" stroke-width="12.5" stroke-linecap="round"/>
+        <!-- cup body -->
+        <path d="M150 308 C156 356 168 396 188 416 C202 430 228 438 260 438 C292 438 318 430 332 416 C352 396 364 356 370 308 Z" fill="#FFFDF7" stroke="#3A2817" stroke-width="3.5"/>
+        <path d="M162 316 C166 352 176 386 190 404 C184 382 176 348 172 316 Z" fill="#EFE4CD" opacity=".55"/>
+        <!-- rim + coffee -->
+        <ellipse cx="260" cy="308" rx="112" ry="27" fill="#FFFDF7" stroke="#3A2817" stroke-width="3.5"/>
+        <ellipse cx="260" cy="308" rx="93" ry="20" fill="url(#coffeeGrad)"/>
+        <ellipse class="ripple" cx="260" cy="308" rx="34" ry="8" fill="none" stroke="#C79A6B" stroke-width="2.4" opacity="0"/>
+        <ellipse class="ripple r2" cx="260" cy="308" rx="58" ry="12" fill="none" stroke="#C79A6B" stroke-width="2" opacity="0"/>
+        <!-- steam -->
+        <path class="steam-p"    d="M228 268 C220 240 240 224 232 196 C226 176 242 160 236 132" fill="none" stroke="#C9A27C" stroke-width="7" stroke-linecap="round"/>
+        <path class="steam-p s2" d="M262 272 C254 242 274 226 266 198 C260 178 276 162 270 134" fill="none" stroke="#C9A27C" stroke-width="7" stroke-linecap="round"/>
+        <path class="steam-p s3" d="M296 266 C288 238 308 222 300 194 C294 174 310 158 304 130" fill="none" stroke="#C9A27C" stroke-width="7" stroke-linecap="round"/>
+        <!-- floating beans -->
+        <g transform="translate(86 146)"><g class="bean-f" style="--r:-16deg;--d:0s"><ellipse rx="17" ry="12" fill="#7A4A26"/><path d="M0 -10.5 C-6.5 -4 -6.5 4 0 10.5" fill="none" stroke="#3A2817" stroke-width="2.4"/><ellipse cx="-4.5" cy="-4" rx="4.5" ry="2.8" fill="#966237" opacity=".65"/></g></g>
+        <g transform="translate(434 138)"><g class="bean-f" style="--r:14deg;--d:.9s"><ellipse rx="17" ry="12" fill="#8B5A31"/><path d="M0 -10.5 C-6.5 -4 -6.5 4 0 10.5" fill="none" stroke="#3A2817" stroke-width="2.4"/><ellipse cx="-4.5" cy="-4" rx="4.5" ry="2.8" fill="#A8744A" opacity=".65"/></g></g>
+        <g transform="translate(452 326)"><g class="bean-f" style="--r:-8deg;--d:1.7s"><ellipse rx="15" ry="10.5" fill="#7A4A26"/><path d="M0 -9 C-5.7 -3.5 -5.7 3.5 0 9" fill="none" stroke="#3A2817" stroke-width="2.2"/><ellipse cx="-4" cy="-3.5" rx="4" ry="2.5" fill="#966237" opacity=".65"/></g></g>
+        <g transform="translate(74 318)"><g class="bean-f" style="--r:10deg;--d:2.5s"><ellipse rx="15" ry="10.5" fill="#8B5A31"/><path d="M0 -9 C-5.7 -3.5 -5.7 3.5 0 9" fill="none" stroke="#3A2817" stroke-width="2.2"/><ellipse cx="-4" cy="-3.5" rx="4" ry="2.5" fill="#A8744A" opacity=".65"/></g></g>
+        <!-- sparkles -->
+        <g transform="translate(150 84)"><path class="twinkle" style="--d:.6s" d="M0 -8 L2.2 -2.2 L8 0 L2.2 2.2 L0 8 L-2.2 2.2 L-8 0 L-2.2 -2.2 Z" fill="#C05F27"/></g>
+        <g transform="translate(398 66)"><path class="twinkle" style="--d:1.4s" d="M0 -8 L2.2 -2.2 L8 0 L2.2 2.2 L0 8 L-2.2 2.2 L-8 0 L-2.2 -2.2 Z" fill="#C05F27"/></g>
+        <g transform="translate(468 236)"><path class="twinkle" style="--d:2.2s" d="M0 -8 L2.2 -2.2 L8 0 L2.2 2.2 L0 8 L-2.2 2.2 L-8 0 L-2.2 -2.2 Z" fill="#C05F27"/></g>
+        <g transform="translate(58 208)"><path class="twinkle" style="--d:3s" d="M0 -8 L2.2 -2.2 L8 0 L2.2 2.2 L0 8 L-2.2 2.2 L-8 0 L-2.2 -2.2 Z" fill="#C05F27"/></g>
+      </svg>
+      <!-- rotating stamp -->
+      <div class="stamp-wrap">
+        <svg viewBox="0 0 120 120" width="100%" aria-hidden="true">
+          <defs><path id="stampC" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs>
+          <g class="stamp-spin">
+            <circle cx="60" cy="60" r="58" fill="#271A10"/>
+            <text font-family="Outfit, sans-serif" font-size="9.4" font-weight="700" letter-spacing="2.4" fill="#F6F0E4">
+              <textPath href="#stampC" textLength="276" lengthAdjust="spacingAndGlyphs">FRESHLY BREWED · Bradford · EST. 2027 ·</textPath>
+            </text>
+          </g>
+          <g transform="rotate(-24 60 60)">
+            <ellipse cx="60" cy="60" rx="10" ry="7.5" fill="#C05F27"/>
+            <path d="M60 53.5 C56.8 57.5 56.8 62.5 60 66.5" fill="none" stroke="#F6F0E4" stroke-width="1.8"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= marquee ======= -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <div class="marquee-seq">
+      <span class="m-item">Good coffee</span>
+      <svg width="13" height="13" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="7" ry="5" fill="#C05F27" transform="rotate(-24 12 12)"/><path d="M12 7.8c-2.6 2.2-2.6 6.2 0 8.4" stroke="#F6F0E4" stroke-width="1.6" fill="none" transform="rotate(-24 12 12)"/></svg>
+      <i>Honest food</i>
+      <svg width="13" height="13" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="7" ry="5" fill="#C05F27" transform="rotate(-24 12 12)"/><path d="M12 7.8c-2.6 2.2-2.6 6.2 0 8.4" stroke="#F6F0E4" stroke-width="1.6" fill="none" transform="rotate(-24 12 12)"/></svg>
+      <span class="m-item">Easy welcome</span>
+      <svg width="13" height="13" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="7" ry="5" fill="#C05F27" transform="rotate(-24 12 12)"/><path d="M12 7.8c-2.6 2.2-2.6 6.2 0 8.4" stroke="#F6F0E4" stroke-width="1.6" fill="none" transform="rotate(-24 12 12)"/></svg>
+      <i>Roasted Tuesdays</i>
+      <svg width="13" height="13" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="7" ry="5" fill="#C05F27" transform="rotate(-24 12 12)"/><path d="M12 7.8c-2.6 2.2-2.6 6.2 0 8.4" stroke="#F6F0E4" stroke-width="1.6" fill="none" transform="rotate(-24 12 12)"/></svg>
+      <span class="m-item">Beans with a story</span>
+      <svg width="13" height="13" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="7" ry="5" fill="#C05F27" transform="rotate(-24 12 12)"/><path d="M12 7.8c-2.6 2.2-2.6 6.2 0 8.4" stroke="#F6F0E4" stroke-width="1.6" fill="none" transform="rotate(-24 12 12)"/></svg>
+      <i>A room to stay in</i>
+      <svg width="13" height="13" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="7" ry="5" fill="#C05F27" transform="rotate(-24 12 12)"/><path d="M12 7.8c-2.6 2.2-2.6 6.2 0 8.4" stroke="#F6F0E4" stroke-width="1.6" fill="none" transform="rotate(-24 12 12)"/></svg>
+    </div>
+    <div class="marquee-seq">
+      <span class="m-item">Good coffee</span>
+      <svg width="13" height="13" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="7" ry="5" fill="#C05F27" transform="rotate(-24 12 12)"/><path d="M12 7.8c-2.6 2.2-2.6 6.2 0 8.4" stroke="#F6F0E4" stroke-width="1.6" fill="none" transform="rotate(-24 12 12)"/></svg>
+      <i>Honest food</i>
+      <svg width="13" height="13" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="7" ry="5" fill="#C05F27" transform="rotate(-24 12 12)"/><path d="M12 7.8c-2.6 2.2-2.6 6.2 0 8.4" stroke="#F6F0E4" stroke-width="1.6" fill="none" transform="rotate(-24 12 12)"/></svg>
+      <span class="m-item">Easy welcome</span>
+      <svg width="13" height="13" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="7" ry="5" fill="#C05F27" transform="rotate(-24 12 12)"/><path d="M12 7.8c-2.6 2.2-2.6 6.2 0 8.4" stroke="#F6F0E4" stroke-width="1.6" fill="none" transform="rotate(-24 12 12)"/></svg>
+      <i>Roasted Tuesdays</i>
+      <svg width="13" height="13" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="7" ry="5" fill="#C05F27" transform="rotate(-24 12 12)"/><path d="M12 7.8c-2.6 2.2-2.6 6.2 0 8.4" stroke="#F6F0E4" stroke-width="1.6" fill="none" transform="rotate(-24 12 12)"/></svg>
+      <span class="m-item">Beans with a story</span>
+      <svg width="13" height="13" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="7" ry="5" fill="#C05F27" transform="rotate(-24 12 12)"/><path d="M12 7.8c-2.6 2.2-2.6 6.2 0 8.4" stroke="#F6F0E4" stroke-width="1.6" fill="none" transform="rotate(-24 12 12)"/></svg>
+      <i>A room to stay in</i>
+      <svg width="13" height="13" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="7" ry="5" fill="#C05F27" transform="rotate(-24 12 12)"/><path d="M12 7.8c-2.6 2.2-2.6 6.2 0 8.4" stroke="#F6F0E4" stroke-width="1.6" fill="none" transform="rotate(-24 12 12)"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ======= visit strip ======= -->
+<div class="visit-strip" id="visit">
+  <div class="wrap">
+    <div class="visit-card reveal">
+      <div class="visit-item">
+        <span class="v-ico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></span>
+        <div>
+          <h4>Come sit with us</h4>
+          <p>Mon–Sun · 7:30am – 6:00pm<br>Kitchen until 3:00pm</p>
+        </div>
+      </div>
+      <div class="visit-item">
+        <span class="v-ico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-5.3-7-11a7 7 0 0 1 14 0c0 5.7-7 11-7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg></span>
+        <div>
+          <h4>Find us</h4>
+          <p>14 Harbourside Walk,<br>Bradford BS1 4QD</p>
+          <a class="text-link" href="https://www.google.com/maps/search/?api=1&query=Harbourside+Bradford" target="_blank" rel="noopener">Get directions
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="visit-item">
+        <span class="v-ico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h4l1.5 4.5-2 1.5a13 13 0 0 0 5.5 5.5l1.5-2 4.5 1.5v4a2 2 0 0 1-2 2C10 20 4 14 4 5a2 2 0 0 1 2-2Z"/></svg></span>
+        <div>
+          <h4>Call ahead</h4>
+          <p>0117 496 0321<br>For large orders &amp; catering</p>
+          <a class="text-link" href="tel:+441174960321">Ring the counter
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="visit-item">
+        <span class="v-ico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg></span>
+        <div>
+          <h4>Say hello</h4>
+          <p>hello@emberandoak.coffee<br>Replies by the next bake</p>
+          <a class="text-link" href="mailto:hello@emberandoak.coffee">Write to us
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= favourites (popular choices) ======= -->
+<section id="favourites">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Order ahead · popular choices</span>
+      <h2 class="h2">The regulars&rsquo; <em>favourites</em></h2>
+      <p class="lead">Based on what our regulars order most — add them to your order and collect at the hatch in about ten minutes, or find a seat and stay a while.</p>
+    </div>
+    <div class="fav-grid" id="favGrid">
+      <!-- product cards are rendered by JS from the PRODUCTS list below -->
+    </div>
+    <p style="text-align:center;margin-top:38px" class="reveal">
+      <a class="text-link" href="#menu">See the full menu
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></svg>
+      </a>
+    </p>
+  </div>
+</section>
+
+<!-- ======= stats ======= -->
+<div class="stats">
+  <div class="wrap stats-grid">
+    <div class="stat reveal"><b><span class="counter" data-count="214">0</span></b><span>five-star reviews</span><i class="stat-line"></i></div>
+    <div class="stat reveal" style="--d:.1s"><b><span class="counter" data-count="43">0</span></b><span>things on the menu</span><i class="stat-line"></i></div>
+    <div class="stat reveal" style="--d:.2s"><b><span class="counter" data-count="12">0</span></b><span>local suppliers</span><i class="stat-line"></i></div>
+    <div class="stat reveal" style="--d:.3s"><b><span class="counter" data-count="2027" data-plain="1">0</span></b><span>first pour on this spot</span><i class="stat-line"></i></div>
+  </div>
+</div>
+
+<!-- ======= order ahead ======= -->
+<section id="order" style="padding-top:clamp(56px,9vw,104px)">
+  <div class="wrap">
+    <div class="order-panel reveal">
+      <div class="order-media">
+        <img src="https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/e26d5824ffe2.jpg" alt="Barista handing a takeaway coffee across the counter" loading="lazy" width="640" height="640">
+      </div>
+      <div class="order-body">
+        <span class="eyebrow">Order ahead</span>
+        <h2>Skip the queue. <em>Your usual, waiting.</em></h2>
+        <p>Order online and collect when it&rsquo;s ready — pay in seconds, no standing in line, no awkward hovering by the hatch.</p>
+        <ol class="steps">
+          <li>
+            <span class="step-n">1</span>
+            <div><b>Pick your usual</b><p>Build your order from the favourites or the full menu — it updates as you go.</p></div>
+          </li>
+          <li>
+            <span class="step-n">2</span>
+            <div><b>Checkout in seconds</b><p>Card, Apple Pay, or pay on collection at the counter — whatever&rsquo;s easiest.</p></div>
+          </li>
+          <li>
+            <span class="step-n">3</span>
+            <div><b>Collect at the hatch</b><p>We call your name when it&rsquo;s ready. Usually about ten minutes, tops.</p></div>
+          </li>
+        </ol>
+        <div class="order-cta">
+          <a class="btn btn-cream" href="#favourites">Start an order
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+          </a>
+          <span class="order-note">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
+            Ready in ~10 minutes
+          </span>
+        </div>
+        <div class="cater-line">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:7px" aria-hidden="true"><path d="M4 18h16M6 18V9l3-3 3 3v9M15 18v-6a3 3 0 0 1 6 0v6"/></svg>
+          Coffee for the whole office? We cater breakfasts, meetings and celebrations across central Bradford —
+          <a class="text-link" href="mailto:catering@emberandoak.coffee">ask about catering</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= values ======= -->
+<section style="padding-top:clamp(48px,7vw,80px)">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow">What we care about</span>
+      <h2 class="h2">Three things we <em>refuse to rush</em></h2>
+    </div>
+    <div class="values-grid">
+      <div class="value-card reveal">
+        <span class="value-ico">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><ellipse cx="12" cy="12" rx="7" ry="5.4" fill="#C05F27" transform="rotate(-24 12 12)"/><path d="M12 7.6c-2.6 2.3-2.6 6.5 0 8.8" stroke="#F6F0E4" stroke-width="1.7" transform="rotate(-24 12 12)"/></svg>
+        </span>
+        <h3>Beans with a story</h3>
+        <p>Single origins from farms we can name, roasted in small Tuesday batches and rested a full week before they meet the grinder.</p>
+      </div>
+      <div class="value-card reveal" style="--d:.12s">
+        <span class="value-ico">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v8.5a2.5 2.5 0 0 0 5 0V3"/><path d="M9.5 3v5"/><path d="M16.5 3c1.7 1.6 2.5 4.5 2.5 7 0 2-1 3-2 3s-2-1-2-3c0 .5-.5 2-2.5 2"/><path d="M5 21h14"/></svg>
+        </span>
+        <h3>Food that fills you up</h3>
+        <p>Bakes and bowls made from ingredients we&rsquo;d happily list — most of them from within thirty miles of the counter.</p>
+      </div>
+      <div class="value-card reveal" style="--d:.24s">
+        <span class="value-ico">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 10V7a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v3"/><path d="M3 13a2 2 0 0 1 4 0v2h10v-2a2 2 0 0 1 4 0v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3Z"/><path d="M6 15h12"/></svg>
+        </span>
+        <h3>A room to stay in</h3>
+        <p>No theatre, no jargon. Warm seats, free refills on batch brew, and wifi that actually works. Stay a while.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= story ======= -->
+<section id="story" style="padding-top:clamp(48px,7vw,80px)">
+  <div class="wrap story-grid">
+    <div class="story-media reveal">
+      <div class="frame">
+        <img src="https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/f017eb751567.jpg" alt="Warm café interior with wooden tables and soft light" loading="lazy" width="900" height="1050">
+      </div>
+      <div class="photo-badge">
+        <div><b>2027</b><span>First pour on the Harbourside</span></div>
+      </div>
+    </div>
+    <div class="story-copy reveal" style="--d:.15s">
+      <span class="eyebrow">Our story</span>
+      <h2 class="h2">Small pleasures, <em>done properly.</em></h2>
+      <p class="lead">Ember &amp; Oak started with a second-hand roaster in a Bradford lock-up and a simple bet: that a coffee house could care as much about its regulars as its roasts.</p>
+      <p class="lead" style="margin-top:14px">Bake at eight every morning, and learn regulars&rsquo; orders by their second week. The room grew up around the people who use it from students, harbourside dog walkers, one chess club that flatly refuses to leave.</p>
+      <div class="story-facts">
+        <div><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><ellipse cx="12" cy="12" rx="7" ry="5.4" fill="currentColor" transform="rotate(-24 12 12)"/></svg>Roasted in-house, every Tuesday</div>
+        <div><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>Baked from 6am, daily</div>
+        <div><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-5.3-7-11a7 7 0 0 1 14 0c0 5.7-7 11-7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>10 minutes from the centre</div>
+      </div>
+      <p class="sign">— Mara &amp; Jonah<b>Founders, Ember &amp; Oak</b></p>
+    </div>
+  </div>
+</section>
+
+<!-- ======= full menu ======= -->
+<section id="menu">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Our menu</span>
+      <h2 class="h2">What&rsquo;s on <em>the board</em></h2>
+      <p class="lead">Coffee made the way it should be, alongside food that&rsquo;s worth ordering on its own. Everything here is available to order ahead.</p>
+    </div>
+
+    <div class="menu-tabs reveal" id="menuTabs" role="tablist" aria-label="Menu categories">
+      <button class="tab active" data-tab="drinks" role="tab" aria-selected="true">Coffee &amp; Drinks <span class="n">15</span></button>
+      <button class="tab" data-tab="bakes" role="tab" aria-selected="false">Pastries &amp; Bakes <span class="n">12</span></button>
+      <button class="tab" data-tab="brunch" role="tab" aria-selected="false">Bowls &amp; Brunch <span class="n">6</span></button>
+    </div>
+
+    <div class="menu-panel active" data-panel="drinks" role="tabpanel">
+      <div class="menu-cols">
+        <div>
+          <div class="menu-item"><div class="m-name">Espresso<small>Our house Ember blend, pulled short and sweet.</small></div><span class="m-dots"></span><span class="m-price">£2.60</span></div>
+          <div class="menu-item"><div class="m-name">Flat White<small>Velvety microfoam over a bold double ristretto.</small></div><span class="m-dots"></span><span class="m-price">£3.20</span></div>
+          <div class="menu-item"><div class="m-name">Latte<small>Classic and silky — any milk you like.</small></div><span class="m-dots"></span><span class="m-price">£3.40</span></div>
+          <div class="menu-item"><div class="m-name">Cappuccino<small>Dry and dusty, with a cocoa rim.</small></div><span class="m-dots"></span><span class="m-price">£3.40</span></div>
+          <div class="menu-item"><div class="m-name">Americano<small>Long and clean, room for milk.</small></div><span class="m-dots"></span><span class="m-price">£2.90</span></div>
+          <div class="menu-item"><div class="m-name">Cortado<small>Half and half, in a glass cup.</small></div><span class="m-dots"></span><span class="m-price">£3.10</span></div>
+          <div class="menu-item"><div class="m-name">Mocha<small>70% cocoa ganache, cream optional.</small></div><span class="m-dots"></span><span class="m-price">£3.90</span></div>
+          <div class="menu-item"><div class="m-name">Filter of the Day<small>Single origin, brewed slow — ask what&rsquo;s on.</small></div><span class="m-dots"></span><span class="m-price">£3.20</span></div>
+        </div>
+        <div>
+          <div class="menu-item"><div class="m-name">Batch Brew<small>Free refill before 10am.</small></div><span class="m-dots"></span><span class="m-price">£2.80</span></div>
+          <div class="menu-item"><div class="m-name">Iced Latte<small>Double shot over milk and ice.</small></div><span class="m-dots"></span><span class="m-price">£4.20</span></div>
+          <div class="menu-item"><div class="m-name">Iced Caramel Frappe<small>The crowd favourite.</small></div><span class="m-dots"></span><span class="m-price">£4.75</span></div>
+          <div class="menu-item"><div class="m-name">Ember Tonic<small>Espresso, tonic, orange peel. Sharp and sparkling.</small></div><span class="m-dots"></span><span class="m-price">£4.50</span></div>
+          <div class="menu-item"><div class="m-name">Matcha Latte<small>Ceremonial grade, whisked to order.</small></div><span class="m-dots"></span><span class="m-price">£4.10</span></div>
+          <div class="menu-item"><div class="m-name">Chai Latte<small>Spiced house chai, properly brewed.</small></div><span class="m-dots"></span><span class="m-price">£3.80</span></div>
+          <div class="menu-item"><div class="m-name">Hot Chocolate<small>70% cocoa, marshmallow optional.</small></div><span class="m-dots"></span><span class="m-price">£3.60</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel" data-panel="bakes" role="tabpanel">
+      <div class="menu-cols">
+        <div>
+          <div class="menu-item"><div class="m-name">Almond Croissant<small>Frangipane, toasted almonds, 6am bake.</small></div><span class="m-dots"></span><span class="m-price">£3.60</span></div>
+          <div class="menu-item"><div class="m-name">Butter Croissant<small>Twenty-seven layers, give or take.</small></div><span class="m-dots"></span><span class="m-price">£2.80</span></div>
+          <div class="menu-item"><div class="m-name">Pain au Chocolat<small>Two batons of 70% cocoa.</small></div><span class="m-dots"></span><span class="m-price">£3.20</span></div>
+          <div class="menu-item"><div class="m-name">Raspberry Cruffin<small>Croissant-meets-muffin, vanilla butter, raspberry. Weekends only.</small></div><span class="m-dots"></span><span class="m-price">£5.10</span></div>
+          <div class="menu-item"><div class="m-name">Pastel de Nata<small>Blistered tops, shattering pastry, straight from the oven.</small></div><span class="m-dots"></span><span class="m-price">£2.90</span></div>
+          <div class="menu-item"><div class="m-name">Cocoa Brownie<small>70% cocoa, sea salt, gluten-free flour.</small></div><span class="m-dots"></span><span class="m-price">£3.50</span></div>
+        </div>
+        <div>
+          <div class="menu-item"><div class="m-name">Banana Bread<small>Toasted, with espresso butter.</small></div><span class="m-dots"></span><span class="m-price">£3.40</span></div>
+          <div class="menu-item"><div class="m-name">Cardamom Bun<small>Saturday only — gone by eleven.</small></div><span class="m-dots"></span><span class="m-price">£3.90</span></div>
+          <div class="menu-item"><div class="m-name">Sourdough &amp; Jam<small>Toasted, with house strawberry jam.</small></div><span class="m-dots"></span><span class="m-price">£4.50</span></div>
+          <div class="menu-item"><div class="m-name">Sausage Roll<small>Puff pastry, fennel, Sage &amp; Apple pork.</small></div><span class="m-dots"></span><span class="m-price">£4.20</span></div>
+          <div class="menu-item"><div class="m-name">Oat Cookie<small>Dark chocolate chunks, chewy middle.</small></div><span class="m-dots"></span><span class="m-price">£2.60</span></div>
+          <div class="menu-item"><div class="m-name">Lemon Drizzle<small>Sharp, sweet, Sunday-bake sized.</small></div><span class="m-dots"></span><span class="m-price">£3.80</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel" data-panel="brunch" role="tabpanel">
+      <div class="menu-cols">
+        <div>
+          <div class="menu-item"><div class="m-name">Morning Granola Bowl<small>House granola, Greek yoghurt, berries, honey, seeds.</small></div><span class="m-dots"></span><span class="m-price">£6.80</span></div>
+          <div class="menu-item"><div class="m-name">Overnight Oats<small>Blueberry compote, toasted almonds.</small></div><span class="m-dots"></span><span class="m-price">£6.20</span></div>
+          <div class="menu-item"><div class="m-name">Avocado Sourdough<small>Chilli, lime, seeds, optional poached egg.</small></div><span class="m-dots"></span><span class="m-price">£8.90</span></div>
+        </div>
+        <div>
+          <div class="menu-item"><div class="m-name">Halloumi Toast<small>Honey, za&rsquo;atar, lemon-dressed rocket.</small></div><span class="m-dots"></span><span class="m-price">£9.20</span></div>
+          <div class="menu-item"><div class="m-name">Ember Breakfast Bun<small>Fried egg, hash brown, brown sauce, brioche.</small></div><span class="m-dots"></span><span class="m-price">£9.50</span></div>
+          <div class="menu-item"><div class="m-name">Açaí Bowl<small>Granola, berries, coconut, two toppings.</small></div><span class="m-dots"></span><span class="m-price">£8.50</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-side reveal">
+      <img src="https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/d869bcac4417.jpg" alt="Iced caramel frappe in a tall glass" loading="lazy" width="172" height="172">
+      <p><b>Decaf available for every coffee on the board</b> — Swiss Water process, so it still tastes of coffee. Milks: whole, semi and oat as standard; almond and soya +40p.</p>
+      <a class="btn btn-ghost btn-sm" href="#order">Order ahead</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======= reviews ======= -->
+<section id="reviews">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Reviews</span>
+      <h2 class="h2">What people say once <em>they&rsquo;ve stayed a bit too long</em></h2>
+      <p class="lead">Real words from real regulars — the full set lives on our Google reviews.</p>
+    </div>
+    <div class="rating-summary reveal" style="justify-content:center">
+      <span class="score">4.9</span>
+      <span class="meta">
+        <span class="stars" aria-hidden="true">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+        </span><br>
+        <b>Excellent</b> · 214 reviews and counting
+      </span>
+    </div>
+    <div class="review-grid">
+      <div class="review-card reveal">
+        <span class="stars" aria-label="5 stars">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+        </span>
+        <p>The flat white here ruined every other coffee for me — in the best possible way. By week two they remembered my order and my dog&rsquo;s name.</p>
+        <div class="reviewer">
+          <span class="avatar">PS</span>
+          <div><b>Priya S.</b><span>Regular since 2021</span></div>
+          <span class="verified" style="margin-left:auto">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+            Google
+          </span>
+        </div>
+      </div>
+      <div class="review-card reveal" style="--d:.12s">
+        <span class="stars" aria-label="5 stars">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+        </span>
+        <p>Came for the cruffin photo, stayed four hours. Comfy seats, zero attitude about laptops, and the batch brew refill is dangerously free before ten.</p>
+        <div class="reviewer">
+          <span class="avatar">TW</span>
+          <div><b>Tom W.</b><span>Works from the window seat</span></div>
+          <span class="verified" style="margin-left:auto">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+            Google
+          </span>
+        </div>
+      </div>
+      <div class="review-card reveal" style="--d:.24s">
+        <span class="stars" aria-label="5 stars">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
+        </span>
+        <p>Best decaf I&rsquo;ve had anywhere — yes, really. Also the banana bread with espresso butter should be investigated by someone. Dangerous stuff.</p>
+        <div class="reviewer">
+          <span class="avatar">AK</span>
+          <div><b>Aisha K.</b><span>Sunday regular</span></div>
+          <span class="verified" style="margin-left:auto">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+            Google
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= journal ======= -->
+<section id="journal" style="padding-top:clamp(48px,7vw,80px)">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow">From the journal</span>
+      <h2 class="h2">Brew notes &amp; <em>kitchen stories</em></h2>
+      <p class="lead">Occasional posts from behind the counter — roast day, the milk shelf, and how to make our flat white at home.</p>
+    </div>
+    <div class="journal-grid">
+      <article class="journal-card reveal" data-article="roast" role="button" tabindex="0">
+        <div class="card-media">
+          <img src="https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/751f0ad56eda.jpg" alt="Roasted coffee beans close up" loading="lazy" width="640" height="400">
+          <span class="tag-chip">Roast day</span>
+        </div>
+        <div class="j-body">
+          <span class="j-chip">Roast day</span>
+          <h3>How we roast our Tuesday batch</h3>
+          <p>From green bean to first sip — a walk through roast day, and why every bag rests a full week before it meets the grinder.</p>
+          <span class="j-meta">12 Nov 2026 <span class="dot"></span> 6 min read</span>
+        </div>
+      </article>
+      <article class="journal-card reveal" style="--d:.12s" data-article="flatwhite" role="button" tabindex="0">
+        <div class="card-media">
+          <img src="https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/d19b40a86db7.jpg" alt="Barista pouring latte art into a cup" loading="lazy" width="640" height="400">
+          <span class="tag-chip">Brew guides</span>
+        </div>
+        <div class="j-body">
+          <span class="j-chip">Brew guides</span>
+          <h3>Aisha&rsquo;s guide to a perfect flat white</h3>
+          <p>Our head barista shares the three variables that matter — and the one everyone fusses over that doesn&rsquo;t.</p>
+          <span class="j-meta">28 Oct 2026 <span class="dot"></span> 4 min read</span>
+        </div>
+      </article>
+      <article class="journal-card reveal" style="--d:.24s" data-article="oat" role="button" tabindex="0">
+        <div class="card-media">
+          <img src="https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/f6ca9a42fd3c.jpg" alt="Flat white seen from above on a wooden table" loading="lazy" width="640" height="400">
+          <span class="tag-chip">Kitchen notes</span>
+        </div>
+        <div class="j-body">
+          <span class="j-chip">Kitchen notes</span>
+          <h3>Our milk story: why oat joined the menu</h3>
+          <p>A short defence of oat milk, why it&rsquo;s our default, and why the espresso still comes first in every conversation.</p>
+          <span class="j-meta">9 Oct 2026 <span class="dot"></span> 3 min read</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ======= FAQ ======= -->
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Good to know</span>
+      <h2 class="h2">Questions, <em>answered</em></h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <button class="faq-q" aria-expanded="false">
+          Do you take bookings?
+          <span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span>
+        </button>
+        <div class="faq-a"><p>Not for tables — we&rsquo;re walk-in only and the room turns over quickly. Parties of eight or more can ring ahead on 0117 496 0321 and we&rsquo;ll do what we can.</p></div>
+      </div>
+      <div class="faq-item reveal" style="--d:.08s">
+        <button class="faq-q" aria-expanded="false">
+          Can I work from the café?
+          <span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span>
+        </button>
+        <div class="faq-a"><p>Yes. Laptops are welcome all day, batch brew refills are free before 10am, and the wifi pass is on the chalkboard. Just be fair to others during the weekend rush.</p></div>
+      </div>
+      <div class="faq-item reveal" style="--d:.16s">
+        <button class="faq-q" aria-expanded="false">
+          What milks do you have?
+          <span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span>
+        </button>
+        <div class="faq-a"><p>Whole, semi and oat as standard; almond and soya for 40p. Oat is our default because it&rsquo;s what the espresso was dialled in on — ask for anything else and we&rsquo;ll happily re-dial.</p></div>
+      </div>
+      <div class="faq-item reveal" style="--d:.24s">
+        <button class="faq-q" aria-expanded="false">
+          Do you cater for offices?
+          <span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span>
+        </button>
+        <div class="faq-a"><p>We do — breakfast meetings, crew catering and celebration spreads, delivered across central Bradford. Email <b>catering@emberandoak.coffee</b> with your date and headcount and we&rsquo;ll put a spread together.</p></div>
+      </div>
+      <div class="faq-item reveal" style="--d:.32s">
+        <button class="faq-q" aria-expanded="false">
+          Where do your beans come from?
+          <span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span>
+        </button>
+        <div class="faq-a"><p>Two named lots per season — currently a washing-station lot in Ethiopia and a small co-op in Colombia — roasted in-house every Tuesday and rested a week before brewing. The current bags are always on the board by the hatch.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= newsletter ======= -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="news reveal">
+      <div>
+        <h2>The Ember Post. <em>One email a month.</em></h2>
+        <p>New bakes before they hit the counter, brew guides worth forwarding, and the occasional secret-menu drop. No spam, ever — we&rsquo;re too busy roasting.</p>
+      </div>
+      <div>
+        <form class="news-form" id="newsForm" novalidate>
+          <input type="email" id="newsEmail" placeholder="you@... " aria-label="Email address" autocomplete="email">
+          <button class="btn" type="submit">Join the list</button>
+        </form>
+        <p class="news-ok" id="newsOk">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+          You&rsquo;re on the list — first Ember Post lands next Tuesday.
+        </p>
+        <p class="news-note" id="newsNote">Unsubscribe anytime · 2,300 people already get it</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ======= footer ======= -->
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#top" class="brand">
+          <span class="brand-mark">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><ellipse cx="12" cy="12" rx="6.5" ry="5" fill="#C05F27" transform="rotate(-24 12 12)"/><path d="M12 8.2c-2.4 2.1-2.4 5.5 0 7.6" stroke="#F6F0E4" stroke-width="1.6" transform="rotate(-24 12 12)"/></svg>
+          </span>
+          <span>
+            <span class="brand-name">Ember &amp; Oak</span>
+            <span class="brand-sub">Coffee House · Bradford</span>
+          </span>
+        </a>
+        <p>Speciality coffee, honest food and an easy welcome on Bradford&rsquo;s Harbourside. Open daily, 7:30–18:00.</p>
+        <div class="socials">
+          <button class="social-btn" data-social="Instagram" aria-label="Instagram">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" stroke="none"/></svg>
+          </button>
+          <button class="social-btn" data-social="Facebook" aria-label="Facebook">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14.5 8.5h2.2v-3h-2.2a3.6 3.6 0 0 0-3.6 3.6v2.4H8.5v3h2.4V21h3v-6.5h2.3l.5-3h-2.8V9.4a1 1 0 0 1 1-0.9z"/></svg>
+          </button>
+          <button class="social-btn" data-social="TikTok" aria-label="TikTok">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14.5 3.5v9.6a3 3 0 1 1-2.3-2.9l.4-2.5a5.5 5.5 0 1 0 4.9 5.4V8.3a4.6 4.6 0 0 0 3.5 1.2V6.4a2.6 2.6 0 0 1-2.5-2.7V3.5h-4Z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul class="f-list">
+          <li><a href="#favourites">The favourites</a></li>
+          <li><a href="#menu">Full menu</a></li>
+          <li><a href="#order">Order ahead</a></li>
+          <li><a href="#story">Our story</a></li>
+          <li><a href="#journal">Journal</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Visit</h4>
+        <ul class="f-list">
+          <li><a href="https://www.google.com/maps/search/?api=1&query=Harbourside+Bradford" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-5.3-7-11a7 7 0 0 1 14 0c0 5.7-7 11-7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>14 Harbourside Walk, BS1 4QD</a></li>
+          <li><a href="#visit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>Mon–Sun · 7:30–18:00</a></li>
+          <li><a href="tel:+441174960321"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h4l1.5 4.5-2 1.5a13 13 0 0 0 5.5 5.5l1.5-2 4.5 1.5v4a2 2 0 0 1-2 2C10 20 4 14 4 5a2 2 0 0 1 2-2Z"/></svg>0117 496 0321</a></li>
+          <li><a href="mailto:hello@emberandoak.coffee"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>hello@emberandoak.coffee</a></li>
+          <li><a href="mailto:catering@emberandoak.coffee"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18h16M6 18V9l3-3 3 3v9M15 18v-6a3 3 0 0 1 6 0v6"/></svg>Office catering</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul class="f-list">
+          <li><button data-doc="Privacy notice"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 5 3 8.4 7 10 4-1.6 7-5 7-10V6l-7-3Z"/></svg>Privacy notice</button></li>
+          <li><button data-doc="Terms of service"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h14v18H5z"/><path d="M9 7h6M9 11h6M9 15h3"/></svg>Terms of service</button></li>
+          <li><button data-doc="Cookie notice"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="10" cy="10" r="1" fill="currentColor" stroke="none"/><circle cx="14.5" cy="13.5" r="1" fill="currentColor" stroke="none"/><circle cx="9" cy="14.5" r="1" fill="currentColor" stroke="none"/></svg>Cookie notice</button></li>
+        </ul>
+      </div>
+    </div>
+    <div class="f-bottom">
+      <span>© <span id="year">2026</span> Ember &amp; Oak Coffee House · Bradford, UK</span>
+      <span>A demo landing page built as a portfolio project — not a real café (yet).</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ======= cart drawer ======= -->
+<div class="scrim" id="scrim" aria-hidden="true"></div>
+<aside class="drawer" id="drawer" aria-label="Your order" aria-hidden="true">
+  <div class="drawer-head">
+    <h3>Your order</h3>
+    <button class="icon-btn" id="cartClose" aria-label="Close order">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <div id="cartView" style="display:flex;flex-direction:column;flex:1;min-height:0">
+    <div class="ship-bar">
+      <p id="shipMsg"><b>£6.20</b> away from free local delivery</p>
+      <div class="ship-track"><div class="ship-fill" id="shipFill"></div></div>
+    </div>
+    <div class="drawer-body" id="cartBody"></div>
+    <div class="drawer-foot">
+      <div class="subtotal-row"><span style="color:var(--ink-70);font-size:14.5px">Subtotal</span><b id="subTotal">£0.00</b></div>
+      <p class="note">Collect at the hatch · usually ready in ~10 minutes</p>
+      <button class="btn btn-ember" id="placeOrder">Place order
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="done-view" id="doneView">
+    <span class="done-ico">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+    </span>
+    <h4>Order placed!</h4>
+    <div class="order-n" id="orderNo">EO-1042</div>
+    <p>Show this at the counter and we&rsquo;ll get it brewing. In a live site, a confirmation text would be on its way. (Demo checkout — nothing was charged.)</p>
+    <button class="btn btn-ghost btn-sm" id="newOrder">Start a new order</button>
+  </div>
+</aside>
+
+<!-- ======= modal ======= -->
+<div class="modal" id="modal" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <button class="icon-btn modal-close" id="modalClose" aria-label="Close">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- toasts + back to top -->
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<button class="to-top" id="toTop" aria-label="Back to top">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>
+</button>
+<script>
+(function () {
+  "use strict";
+
+  /* ============================================================
+     EDIT ME — swap products, prices, images and tags right here.
+     Images are hot-linked; replace the URL to change a photo.
+     ============================================================ */
+  var IMG = "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/";
+  var PRODUCTS = [
+    { id: "croissant", name: "Almond Croissant", price: 3.60, img: IMG + "789862f5dcb9.jpg", tag: "Baked at 6am",
+      desc: "Buttery, flaky layers filled with frangipane, topped with toasted almonds and a dust of icing sugar." },
+    { id: "frappe", name: "Iced Caramel Frappe", price: 4.75, img: IMG + "a11ceebccc27.jpg", tag: "House favourite",
+      desc: "Double espresso shaken with milk and house caramel over ice, crowned with soft cream." },
+    { id: "cruffin", name: "Raspberry Cruffin", price: 5.10, img: IMG + "62c15f4888f3.jpg", tag: "Weekend only",
+      desc: "A croissant-muffin hybrid, layered with vanilla butter and sharp raspberry compote." },
+    { id: "nata", name: "Pastel de Nata", price: 2.90, img: IMG + "c29aa5ab2319.jpg", tag: "Straight from oven",
+      desc: "Portuguese custard tarts with blistered tops and shattering pastry — best eaten warm, always." },
+    { id: "brownie", name: "Cocoa Brownie", price: 3.50, img: IMG + "8ea46b247f59.jpg", tag: "Gluten free",
+      desc: "Dense, fudgy 70% cocoa brownie with a pinch of sea salt. Gluten-free flour, zero compromises." },
+    { id: "bowl", name: "Morning Granola Bowl", price: 6.80, img: IMG + "1c2a3946befb.png", tag: "Before 11am",
+      desc: "House granola, Greek yoghurt, seasonal berries, honey and toasted seeds. The steady start." }
+  ];
+  var FREE_DELIVERY = 20; // free local delivery over £20
+
+  var $ = function (sel, ctx) { return (ctx || document).querySelector(sel); };
+  var $$ = function (sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); };
+  var money = function (n) { return "\u00A3" + n.toFixed(2); };
+
+  /* ---------- journal + legal content ---------- */
+  var ARTICLES = {
+    roast: {
+      chip: "Roast day", title: "How we roast our Tuesday batch",
+      meta: "12 Nov 2026 · 6 min read · By Jonah",
+      body: [
+        "Every Tuesday at six, before the ovens go on, the roaster goes on. The window gets loud, the lock-up smells like caramelised toast, and for two hours the whole street knows what we do for a living. Roast day is our favourite day, and this is what it actually looks like.",
+        "We roast in batches of twelve kilos — small enough that we can chase the curve, big enough to keep the counter in coffee for a week. The Ember blend gets a steady drum drop, and single origins get their own little graphs taped to the wall beside the machine. First crack lands around nine and a half minutes; anything after that is a conversation between the beans and whoever is on the paddle.",
+        "Then comes the part nobody photographs: waiting. Every bag rests a full week before it meets the grinder, letting the CO\u2082 from roasting off-gas so the cup tastes of the farm and not of the fire. Impatience is the most common home-brewing mistake, and it is entirely free to fix."
+      ]
+    },
+    flatwhite: {
+      chip: "Brew guides", title: "Aisha \u2027s guide to a perfect flat white",
+      meta: "28 Oct 2026 · 4 min read · By Aisha, head barista",
+      body: [
+        "People worry about the wrong things. The three variables that actually matter are bean freshness, grind, and milk texture — in that order. A flat white is two ristretto shots under four ounces of silky milk, and if the espresso is fresh and the grind is dialled, you are already most of the way there.",
+        "Grind is where to spend your attention. If your shot runs fast and blonde, go finer. If it drips stubbornly and tastes woody, go coarser. Somewhere between those two warnings is your coffee — and it moves with the weather, so forgive yourself for chasing it. Even in the shop we nudge the grinder most mornings.",
+        "The variable that does not matter: latte art. A tulip is charming, but texture is the job. You want milk that folds into the espresso, glossy like wet paint. And use the good beans within a month of roast. After that, no technique on earth saves the cup."
+      ]
+    },
+    oat: {
+      chip: "Kitchen notes", title: "Our milk story: why oat joined the menu",
+      meta: "9 Oct 2026 · 3 min read · By Mara",
+      body: [
+        "We resisted oat milk for a year, which in retrospect was a year of making the wrong lattes for people who kept politely asking. The espresso comes first in every conversation at this counter — but the honest reason oat is now our default is that it makes the best-tasting drink for most people, most of the time.",
+        "Whole milk is still king for a flat white, and nothing beats it in hot chocolate. But oat behaves: it steams without sulking, it does not fight the chocolate notes in the espresso, and barista-grade versions sit comfortably in the same price bracket as the dairy we buy. Soya and almond stay on the board for the people who need them, at 40p, and nobody is lectured about their choice.",
+        "The lesson we took from the milk shelf is the same one the whole café runs on: care about the ingredients, stay relaxed about the rest, and let people have their drink how they like it."
+      ]
+    }
+  };
+  var DOCS = {
+    "Privacy notice": "This is a demo project, so there is no real privacy notice yet. On the live site this page would set out what data the order form collects (name, contact, order history), how it is stored, and how to ask for a copy or deletion. No data is collected by this page itself.",
+    "Terms of service": "A demo placeholder — the real terms would cover orders and cancellations, delivery windows, allergen responsibility, and the catering agreement. Nothing on this page takes payment or creates an order in a real system.",
+    "Cookie notice": "Another placeholder. The finished site would explain analytics cookies and let you opt in. This page sets no cookies at all — the only thing stored is your demo order, saved in your own browser."
+  };
+
+  /* ---------- toasts ---------- */
+  var toastsEl = $("#toasts");
+  function toast(msg) {
+    while (toastsEl.children.length >= 3) toastsEl.removeChild(toastsEl.firstChild);
+    var t = document.createElement("div");
+    t.className = "toast";
+    t.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><span></span>';
+    t.lastChild.textContent = msg;
+    toastsEl.appendChild(t);
+    setTimeout(function () { t.classList.add("out"); }, 2400);
+    setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 2900);
+  }
+
+  /* ---------- products ---------- */
+  var favGrid = $("#favGrid");
+  PRODUCTS.forEach(function (p) {
+    var card = document.createElement("article");
+    card.className = "card reveal";
+    card.style.setProperty("--d", "0s");
+    card.setAttribute("itemscope", "");
+    card.innerHTML =
+      '<div class="card-media"><img src="' + p.img + '" alt="' + p.name + '" loading="lazy" width="480" height="372"><span class="tag-chip">' + p.tag + '</span></div>' +
+      '<div class="card-body">' +
+        '<div class="card-title-row"><h3>' + p.name + '</h3><span class="price">' + money(p.price) + '</span></div>' +
+        '<p class="card-desc">' + p.desc + '</p>' +
+        '<div class="card-actions">' +
+          '<span class="card-meta"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>Collect in ~10 min</span>' +
+          '<button class="add-btn" data-id="' + p.id + '" aria-label="Add ' + p.name + ' to your order">Add' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>' +
+        '</div>' +
+      '</div>';
+    favGrid.appendChild(card);
+  });
+
+  /* ---------- cart ---------- */
+  var KEY = "ember-oak-cart-v1";
+  var cart = {};
+  try {
+    var saved = JSON.parse(localStorage.getItem(KEY) || "{}");
+    PRODUCTS.forEach(function (p) { if (saved[p.id]) cart[p.id] = saved[p.id]; });
+  } catch (e) { /* private mode / no storage — cart simply won't persist */ }
+
+  var drawer = $("#drawer"), scrim = $("#scrim"), cartBody = $("#cartBody"),
+      cartView = $("#cartView"), doneView = $("#doneView"), subTotal = $("#subTotal"),
+      shipMsg = $("#shipMsg"), shipFill = $("#shipFill"), cartCount = $("#cartCount"),
+      cartBtn = $("#cartBtn");
+
+  function productById(id) {
+    for (var i = 0; i < PRODUCTS.length; i++) if (PRODUCTS[i].id === id) return PRODUCTS[i];
+    return null;
+  }
+  function cartCountTotal() {
+    var n = 0;
+    Object.keys(cart).forEach(function (k) { n += cart[k]; });
+    return n;
+  }
+  function cartSubtotal() {
+    var s = 0;
+    Object.keys(cart).forEach(function (k) { s += productById(k).price * cart[k]; });
+    return s;
+  }
+  function saveCart() {
+    try { localStorage.setItem(KEY, JSON.stringify(cart)); } catch (e) {}
+  }
+  function updateBadge() {
+    var n = cartCountTotal();
+    cartCount.textContent = n;
+    cartCount.classList.toggle("on", n > 0);
+    cartBtn.classList.remove("pop");
+    void cartBtn.offsetWidth; /* restart animation */
+    if (n > 0) cartBtn.classList.add("pop");
+  }
+  function renderCart() {
+    var ids = Object.keys(cart);
+    subTotal.textContent = money(cartSubtotal());
+    var pct = Math.min(cartSubtotal() / FREE_DELIVERY * 100, 100);
+    shipFill.style.width = pct + "%";
+    if (cartSubtotal() >= FREE_DELIVERY) {
+      shipMsg.innerHTML = "You \u20279ve unlocked <b>free local delivery</b>";
+    } else {
+      shipMsg.innerHTML = "<b>" + money(FREE_DELIVERY - cartSubtotal()) + "</b> away from free local delivery";
+    }
+    if (!ids.length) {
+      cartBody.innerHTML =
+        '<div class="cart-empty">' +
+          '<span class="cup-ico"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h11l1 9.5a2 2 0 0 1-2 2.2H6a2 2 0 0 1-2-2.2L5 8Z"/><path d="M8 8V6a2.5 2.5 0 0 1 5 0"/><path d="M9.5 12.5h2"/></svg></span>' +
+          '<p>Nothing here yet — the favourites are calling.</p>' +
+          '<button class="btn btn-ghost btn-sm" id="emptyBrowse">Browse the favourites</button>' +
+        '</div>';
+      var b = $("#emptyBrowse");
+      if (b) b.addEventListener("click", function () { closeDrawer(); location.hash = ""; scrollToId("#favourites"); });
+      return;
+    }
+    cartBody.innerHTML = "";
+    ids.forEach(function (id) {
+      var p = productById(id), qty = cart[id];
+      var row = document.createElement("div");
+      row.className = "cart-item";
+      row.innerHTML =
+        '<img src="' + p.img + '" alt="" width="78" height="78">' +
+        '<div class="ci-body">' +
+          '<h4>' + p.name + '</h4>' +
+          '<div class="ci-price">' + money(p.price) + ' each</div>' +
+          '<div class="qty-row">' +
+            '<span class="qty">' +
+              '<button data-act="dec" data-id="' + id + '" aria-label="One less ' + p.name + '"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></button>' +
+              '<b>' + qty + '</b>' +
+              '<button data-act="inc" data-id="' + id + '" aria-label="One more ' + p.name + '"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>' +
+            '</span>' +
+            '<button class="remove-btn" data-act="rm" data-id="' + id + '">Remove</button>' +
+          '</div>' +
+        '</div>';
+      cartBody.appendChild(row);
+    });
+  }
+  function addToCart(id) {
+    cart[id] = (cart[id] || 0) + 1;
+    var p = productById(id);
+    saveCart(); updateBadge(); renderCart();
+    toast("Added " + p.name + " · " + money(p.price));
+  }
+  function changeQty(id, delta) {
+    cart[id] = (cart[id] || 0) + delta;
+    if (cart[id] <= 0) delete cart[id];
+    saveCart(); updateBadge(); renderCart();
+  }
+
+  favGrid.addEventListener("click", function (e) {
+    var btn = e.target.closest ? e.target.closest(".add-btn") : null;
+    if (btn) { addToCart(btn.getAttribute("data-id")); }
+  });
+  cartBody.addEventListener("click", function (e) {
+    var btn = e.target.closest ? e.target.closest("button[data-id]") : null;
+    if (!btn) return;
+    var id = btn.getAttribute("data-id"), act = btn.getAttribute("data-act");
+    if (act === "inc") changeQty(id, 1);
+    if (act === "dec") changeQty(id, -1);
+    if (act === "rm") { delete cart[id]; saveCart(); updateBadge(); renderCart(); }
+  });
+
+  /* drawer open/close + scroll lock */
+  var lock = 0;
+  function lockScroll(on) {
+    if (on) { lock++; document.body.style.overflow = "hidden"; }
+    else { lock = Math.max(0, lock - 1); if (!lock) document.body.style.overflow = ""; }
+  }
+  function openDrawer() {
+    doneView.classList.remove("on");
+    cartView.style.display = "flex";
+    renderCart();
+    drawer.classList.add("open"); drawer.setAttribute("aria-hidden", "false");
+    scrim.classList.add("on"); lockScroll(true);
+  }
+  function closeDrawer() {
+    drawer.classList.remove("open"); drawer.setAttribute("aria-hidden", "true");
+    if (!modal.classList.contains("on")) scrim.classList.remove("on");
+    lockScroll(false);
+  }
+  cartBtn.addEventListener("click", openDrawer);
+  $("#cartClose").addEventListener("click", closeDrawer);
+
+  /* place order (demo checkout) */
+  $("#placeOrder").addEventListener("click", function () {
+    if (!cartCountTotal()) { toast("Your order is empty — add something first."); return; }
+    $("#orderNo").textContent = "EO-" + (1000 + Math.floor(Math.random() * 9000));
+    cart = {}; saveCart(); updateBadge(); renderCart();
+    cartView.style.display = "none";
+    doneView.classList.add("on");
+    toast("Order placed — demo checkout, nothing was charged.");
+  });
+  $("#newOrder").addEventListener("click", function () {
+    doneView.classList.remove("on");
+    cartView.style.display = "flex";
+    renderCart();
+    closeDrawer();
+    scrollToId("#favourites");
+  });
+
+  /* ---------- modal ---------- */
+  var modal = $("#modal"), modalContent = $("#modalContent");
+  function openModal(html) {
+    modalContent.innerHTML = html;
+    modal.classList.add("on"); modal.setAttribute("aria-hidden", "false");
+    scrim.classList.add("on"); lockScroll(true);
+  }
+  function closeModal() {
+    modal.classList.remove("on"); modal.setAttribute("aria-hidden", "true");
+    if (!drawer.classList.contains("open")) scrim.classList.remove("on");
+    lockScroll(false);
+  }
+  $("#modalClose").addEventListener("click", closeModal);
+  scrim.addEventListener("click", function () {
+    if (drawer.classList.contains("open")) closeDrawer();
+    if (modal.classList.contains("on")) closeModal();
+  });
+
+  $$(".journal-card").forEach(function (cardEl) {
+    function open() {
+      var a = ARTICLES[cardEl.getAttribute("data-article")];
+      if (!a) return;
+      var html = '<span class="j-chip">' + a.chip + '</span><h3>' + a.title + '</h3>' +
+        '<div class="m-meta">' + a.meta + '</div><div class="m-body">' +
+        a.body.map(function (p) { return "<p>" + p + "</p>"; }).join("") + "</div>";
+      openModal(html);
+    }
+    cardEl.addEventListener("click", open);
+    cardEl.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); }
+    });
+  });
+  $$("footer [data-doc]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var name = btn.getAttribute("data-doc");
+      openModal('<span class="j-chip">Demo notice</span><h3>' + name + '</h3>' +
+        '<div class="m-meta">Placeholder · this is a portfolio demo</div>' +
+        '<div class="m-body"><p>' + DOCS[name] + "</p></div>");
+    });
+  });
+  $$(".social-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      toast("Demo project — link your real " + btn.getAttribute("data-social") + " profile here.");
+    });
+  });
+
+  /* ---------- menu tabs ---------- */
+  var tabs = $$("#menuTabs .tab"), panels = $$(".menu-panel");
+  tabs.forEach(function (tab) {
+    tab.addEventListener("click", function () {
+      tabs.forEach(function (t) { t.classList.toggle("active", t === tab); t.setAttribute("aria-selected", t === tab ? "true" : "false"); });
+      panels.forEach(function (p) { p.classList.toggle("active", p.getAttribute("data-panel") === tab.getAttribute("data-tab")); });
+    });
+  });
+
+  /* ---------- FAQ accordion ---------- */
+  $$(".faq-item").forEach(function (item) {
+    var q = $(".faq-q", item), a = $(".faq-a", item);
+    q.addEventListener("click", function () {
+      var isOpen = item.classList.contains("open");
+      $$(".faq-item.open").forEach(function (other) {
+        other.classList.remove("open");
+        $(".faq-q", other).setAttribute("aria-expanded", "false");
+        $(".faq-a", other).style.maxHeight = "0px";
+      });
+      if (!isOpen) {
+        item.classList.add("open");
+        q.setAttribute("aria-expanded", "true");
+        a.style.maxHeight = a.scrollHeight + "px";
+      }
+    });
+  });
+
+  /* ---------- mobile menu ---------- */
+  var burger = $("#burger"), mMenu = $("#mobileMenu");
+  function closeMobile() {
+    burger.classList.remove("open"); mMenu.classList.remove("open");
+    burger.setAttribute("aria-expanded", "false");
+    mMenu.setAttribute("aria-hidden", "true");
+    lockScroll(false);
+  }
+  burger.addEventListener("click", function () {
+    var open = mMenu.classList.toggle("open");
+    burger.classList.toggle("open", open);
+    burger.setAttribute("aria-expanded", open ? "true" : "false");
+    mMenu.setAttribute("aria-hidden", open ? "false" : "true");
+    lockScroll(open);
+  });
+  $$(".m-link", mMenu).forEach(function (l) { l.addEventListener("click", closeMobile); });
+
+  /* ---------- newsletter ---------- */
+  var newsForm = $("#newsForm"), newsEmail = $("#newsEmail");
+  newsForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var v = newsEmail.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+      toast("Please enter a valid email address.");
+      newsEmail.focus();
+      return;
+    }
+    newsForm.style.display = "none";
+    $("#newsNote").style.display = "none";
+    $("#newsOk").classList.add("on");
+    toast("Welcome to the Ember Post — see you next Tuesday.");
+  });
+
+  /* ---------- escape closes overlays ---------- */
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      if (modal.classList.contains("on")) closeModal();
+      if (drawer.classList.contains("open")) closeDrawer();
+      if (mMenu.classList.contains("open")) closeMobile();
+    }
+  });
+
+  /* ---------- nav state + back-to-top ---------- */
+  var navbar = $("#navbar"), toTop = $("#toTop");
+  function onScroll() {
+    navbar.classList.toggle("scrolled", window.scrollY > 8);
+    toTop.classList.toggle("on", window.scrollY > 620);
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+  toTop.addEventListener("click", function () { window.scrollTo({ top: 0, behavior: "smooth" }); });
+
+  function scrollToId(sel) {
+    var el = $(sel);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  /* ---------- active section highlight ---------- */
+  var linkMap = {};
+  $$(".nav-links a").forEach(function (a) { linkMap[a.getAttribute("href").slice(1)] = a; });
+  var sectionIO = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.isIntersecting) {
+        $$(".nav-links a").forEach(function (a) { a.classList.remove("active"); });
+        var a = linkMap[en.target.id];
+        if (a) a.classList.add("active");
+      }
+    });
+  }, { rootMargin: "-42% 0px -52% 0px" });
+  ["favourites", "menu", "story", "reviews", "journal", "faq"].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) sectionIO.observe(el);
+  });
+
+  /* ---------- reveal on scroll ---------- */
+  var revealIO = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.isIntersecting) { en.target.classList.add("in"); revealIO.unobserve(en.target); }
+    });
+  }, { threshold: 0.12 });
+  $$(".reveal").forEach(function (el) { revealIO.observe(el); });
+
+  /* ---------- animated counters ---------- */
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var counterIO = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      var el = en.target, target = parseInt(el.getAttribute("data-count"), 10) || 0;
+      counterIO.unobserve(el);
+      if (reduceMotion) { el.textContent = target; return; }
+      var t0 = null, dur = 1500;
+      function frame(t) {
+        if (!t0) t0 = t;
+        var k = Math.min((t - t0) / dur, 1), e = 1 - Math.pow(1 - k, 3);
+        el.textContent = el.hasAttribute("data-plain")
+          ? Math.round(target * e)
+          : Math.round(target * e).toLocaleString("en-GB");
+        if (k < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    });
+  }, { threshold: 0.6 });
+  $$(".counter").forEach(function (el) { counterIO.observe(el); });
+
+  /* ---------- init ---------- */
+  $("#year").textContent = new Date().getFullYear();
+  updateBadge();
+})();
+</script>
+</body>
+</html>
